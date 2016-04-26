@@ -16,17 +16,8 @@
 
 import Foundation
 
-public class TheMovieDatabase {
-    private let apiKey: String
-    private let fetch: NetworkFetch
-    
-    public init(apiKey: String, networkFetch: NetworkFetch) {
-        self.apiKey = apiKey
-        fetch = networkFetch
-    }
-    
-    public func fetchTopMovies(completion: () -> ()) {
-        Logging.log("Fetch top movies")
-        let listRequest = ListTopMoviesRequest(fetch: fetch)
-    }
+public typealias NetworkFetchClosure = (NSData?, Int, NSError?) -> ()
+
+public protocol NetworkFetch {
+    func fetchRequest(request: NSURLRequest, completion: NetworkFetchClosure)
 }
