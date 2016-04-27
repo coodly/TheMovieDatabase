@@ -20,6 +20,6 @@ private let ListMoviesPath = "/movie/top_rated"
 
 class ListTopMoviesRequest: NetworkRequest {
     override func execute() {
-        GET(ListMoviesPath)
+        GET(ListMoviesPath, parameters: ["api_key": apiKey])
     }
 }

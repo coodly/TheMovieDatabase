@@ -28,5 +28,7 @@ public class TheMovieDatabase {
     public func fetchTopMovies(completion: () -> ()) {
         Logging.log("Fetch top movies")
         let listRequest = ListTopMoviesRequest(fetch: fetch)
+        listRequest.apiKey = apiKey
+        listRequest.execute()
     }
 }
