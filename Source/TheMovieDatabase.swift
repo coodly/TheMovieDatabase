@@ -25,10 +25,17 @@ public class TheMovieDatabase {
         fetch = networkFetch
     }
     
-    public func fetchTopMovies(completion: () -> ()) {
+    public func fetchTopMovies(completion: (Cursor<Movie>) -> ()) {
         Logging.log("Fetch top movies")
         let listRequest = ListTopMoviesRequest(fetch: fetch)
         listRequest.apiKey = apiKey
+        listRequest.resulthandler = {
+            result, error in
+            
+            if let cursor = result as? Cursor<Movie> {
+                completion(cursor)
+            }
+        }
         listRequest.execute()
     }
 }

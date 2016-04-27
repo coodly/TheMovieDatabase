@@ -16,21 +16,27 @@
 
 import Foundation
 
-private let ListMoviesPath = "/movie/top_rated"
-
-class ListTopMoviesRequest: NetworkRequest {
-    override func execute() {
-        GET(ListMoviesPath, parameters: ["api_key": apiKey])
-    }
+public struct Movie {
+    let id: Int
+    let title: String
+    let rating: Float
     
-    override func handleSuccessResponse(data: [String : AnyObject]) {
-        let createMovieClosure: ([String: AnyObject]) -> (Movie?) = {
-            data in
-            
-            return Movie.loadFromData(data)
+    static func loadFromData(data: [String: AnyObject]) -> Movie? {
+        guard let id = data["id"] as? Int else {
+            Logging.log("id not found")
+            return nil
         }
         
-        let cursor = Cursor<Movie>.loadFromData(data, creation: createMovieClosure)
-        resulthandler(cursor, nil)
+        guard let title = data["title"] as? String else {
+            Logging.log("Title not found")
+            return nil
+        }
+        
+        guard let rating = data["vote_average"] as? Float else {
+            Logging.log("Rating not found")
+            return nil
+        }
+        
+        return Movie(id: id, title: title, rating: rating)
     }
 }
