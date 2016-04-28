@@ -16,7 +16,6 @@
 		A746CC571CD240B200F85BB8 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = A746CC501CD240B200F85BB8 /* Movie.swift */; };
 		A746CC581CD240B200F85BB8 /* NetworkFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A746CC511CD240B200F85BB8 /* NetworkFetch.swift */; };
 		A746CC591CD240B200F85BB8 /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A746CC521CD240B200F85BB8 /* NetworkRequest.swift */; };
-		A746CC5A1CD240B200F85BB8 /* TheMovieDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A746CC531CD240B200F85BB8 /* TheMovieDatabase.swift */; };
 		A746CC5E1CD2455800F85BB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A746CC5C1CD2455800F85BB8 /* Main.storyboard */; };
 		A746CC611CD2459700F85BB8 /* LaunchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A746CC601CD2459700F85BB8 /* LaunchView.xib */; };
 		A746CC641CD2481100F85BB8 /* SimpleFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A746CC631CD2481100F85BB8 /* SimpleFetch.swift */; };
@@ -25,6 +24,7 @@
 		A746CC6E1CD2507A00F85BB8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A746CC6B1CD2507A00F85BB8 /* Localizable.strings */; };
 		A746CC731CD25A1D00F85BB8 /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A746CC711CD25A1D00F85BB8 /* MovieCell.swift */; };
 		A746CC741CD25A1D00F85BB8 /* MovieCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A746CC721CD25A1D00F85BB8 /* MovieCell.xib */; };
+		A746CCA11CD2885100F85BB8 /* DatabaseConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A746CCA01CD2885100F85BB8 /* DatabaseConnection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,7 +38,6 @@
 		A746CC501CD240B200F85BB8 /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		A746CC511CD240B200F85BB8 /* NetworkFetch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkFetch.swift; sourceTree = "<group>"; };
 		A746CC521CD240B200F85BB8 /* NetworkRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
-		A746CC531CD240B200F85BB8 /* TheMovieDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TheMovieDatabase.swift; sourceTree = "<group>"; };
 		A746CC5C1CD2455800F85BB8 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		A746CC601CD2459700F85BB8 /* LaunchView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchView.xib; sourceTree = "<group>"; };
 		A746CC631CD2481100F85BB8 /* SimpleFetch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleFetch.swift; sourceTree = "<group>"; };
@@ -47,6 +46,7 @@
 		A746CC6C1CD2507A00F85BB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		A746CC711CD25A1D00F85BB8 /* MovieCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
 		A746CC721CD25A1D00F85BB8 /* MovieCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieCell.xib; sourceTree = "<group>"; };
+		A746CCA01CD2885100F85BB8 /* DatabaseConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseConnection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,12 +96,12 @@
 			isa = PBXGroup;
 			children = (
 				A746CC4D1CD240B200F85BB8 /* Cursor.swift */,
+				A746CCA01CD2885100F85BB8 /* DatabaseConnection.swift */,
 				A746CC4E1CD240B200F85BB8 /* ListTopMoviesRequest.swift */,
 				A746CC4F1CD240B200F85BB8 /* Logging.swift */,
 				A746CC501CD240B200F85BB8 /* Movie.swift */,
 				A746CC511CD240B200F85BB8 /* NetworkFetch.swift */,
 				A746CC521CD240B200F85BB8 /* NetworkRequest.swift */,
-				A746CC531CD240B200F85BB8 /* TheMovieDatabase.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -237,8 +237,8 @@
 				A746CC561CD240B200F85BB8 /* Logging.swift in Sources */,
 				A746CC731CD25A1D00F85BB8 /* MovieCell.swift in Sources */,
 				A746CC591CD240B200F85BB8 /* NetworkRequest.swift in Sources */,
-				A746CC5A1CD240B200F85BB8 /* TheMovieDatabase.swift in Sources */,
 				A746CC581CD240B200F85BB8 /* NetworkFetch.swift in Sources */,
+				A746CCA11CD2885100F85BB8 /* DatabaseConnection.swift in Sources */,
 				A746CC571CD240B200F85BB8 /* Movie.swift in Sources */,
 				A746CC461CD2409600F85BB8 /* AppDelegate.swift in Sources */,
 				A746CC541CD240B200F85BB8 /* Cursor.swift in Sources */,

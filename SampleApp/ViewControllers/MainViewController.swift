@@ -21,7 +21,7 @@ private let CellIdentifier = "CellIdentifier"
 class MainViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     
-    var tmdb: TheMovieDatabase!
+    var tmdb: DatabaseConnection!
     private var cursor: Cursor<Movie>?
     
     override func viewDidLoad() {

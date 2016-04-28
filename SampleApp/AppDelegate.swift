@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var TMDBAPIKey = ""
     
     var window: UIWindow?
-    private var themdb: TheMovieDatabase!
+    private var themdb: DatabaseConnection!
     private let networkFetch = SimpleFetch()
 
 
@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             TMDBAPIKey = key
         }
         
-        themdb = TheMovieDatabase(apiKey: TMDBAPIKey, networkFetch: networkFetch)
+        themdb = DatabaseConnection(apiKey: TMDBAPIKey, networkFetch: networkFetch)
         
         Logging.sharedInstance.delegate = self
         
