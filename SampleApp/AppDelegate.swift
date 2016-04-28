@@ -18,12 +18,27 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    // Put here your key from https://www.themoviedb.org/account/<username>/api
+    private var TMDBAPIKey = ""
+    
     var window: UIWindow?
+    private var themdb: TheMovieDatabase!
+    private let networkFetch = SimpleFetch()
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        if TMDBAPIKey == "", let key = NSProcessInfo.processInfo().environment["TMDBKey"] {
+            TMDBAPIKey = key
+        }
+        
+        themdb = TheMovieDatabase(apiKey: TMDBAPIKey, networkFetch: networkFetch)
+        
+        Logging.sharedInstance.delegate = self
+        
+        let navController = window?.rootViewController as! UINavigationController
+        let controller = navController.topViewController as! MainViewController
+        controller.tmdb = themdb
+        
         return true
     }
 
@@ -48,7 +63,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+}
 
-
+extension AppDelegate: LoggingDelegate {
+    func log<T>(object: T, file: String, function: String, line: Int) {
+        let message = "\(file) - \(function):\(line) - \(object)"
+        print(message)
+    }
 }
 

@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import UIKit
+import Foundation
 
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+class SimpleFetch: NetworkFetch {
+    func fetchRequest(request: NSURLRequest, completion: NetworkFetchClosure) {
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            (data, response, error) in
+            
+            var status = 0
+            if let httpResponse = response as? NSHTTPURLResponse {
+                status = httpResponse.statusCode
+            }
+            
+            completion(data, status, error)
+        }
+        task.resume()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
 }
-
