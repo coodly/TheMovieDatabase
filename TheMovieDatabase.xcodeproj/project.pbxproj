@@ -23,6 +23,8 @@
 		A746CC671CD24F9A00F85BB8 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A746CC661CD24F9A00F85BB8 /* MainViewController.swift */; };
 		A746CC6D1CD2507A00F85BB8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A746CC691CD2507A00F85BB8 /* InfoPlist.strings */; };
 		A746CC6E1CD2507A00F85BB8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A746CC6B1CD2507A00F85BB8 /* Localizable.strings */; };
+		A746CC731CD25A1D00F85BB8 /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A746CC711CD25A1D00F85BB8 /* MovieCell.swift */; };
+		A746CC741CD25A1D00F85BB8 /* MovieCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A746CC721CD25A1D00F85BB8 /* MovieCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 		A746CC661CD24F9A00F85BB8 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		A746CC6A1CD2507A00F85BB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		A746CC6C1CD2507A00F85BB8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
+		A746CC711CD25A1D00F85BB8 /* MovieCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
+		A746CC721CD25A1D00F85BB8 /* MovieCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +80,7 @@
 		A746CC3D1CD2409600F85BB8 /* SampleApp */ = {
 			isa = PBXGroup;
 			children = (
+				A746CC701CD25A0700F85BB8 /* Cells */,
 				A746CC621CD247F200F85BB8 /* Network */,
 				A746CC6F1CD2508200F85BB8 /* Supporting Files */,
 				A746CC651CD24F6400F85BB8 /* ViewControllers */,
@@ -143,6 +148,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		A746CC701CD25A0700F85BB8 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A746CC711CD25A1D00F85BB8 /* MovieCell.swift */,
+				A746CC721CD25A1D00F85BB8 /* MovieCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -202,6 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A746CC471CD2409600F85BB8 /* Assets.xcassets in Resources */,
+				A746CC741CD25A1D00F85BB8 /* MovieCell.xib in Resources */,
 				A746CC6E1CD2507A00F85BB8 /* Localizable.strings in Resources */,
 				A746CC611CD2459700F85BB8 /* LaunchView.xib in Resources */,
 				A746CC4A1CD2409600F85BB8 /* Info.plist in Resources */,
@@ -220,6 +235,7 @@
 				A746CC641CD2481100F85BB8 /* SimpleFetch.swift in Sources */,
 				A746CC551CD240B200F85BB8 /* ListTopMoviesRequest.swift in Sources */,
 				A746CC561CD240B200F85BB8 /* Logging.swift in Sources */,
+				A746CC731CD25A1D00F85BB8 /* MovieCell.swift in Sources */,
 				A746CC591CD240B200F85BB8 /* NetworkRequest.swift in Sources */,
 				A746CC5A1CD240B200F85BB8 /* TheMovieDatabase.swift in Sources */,
 				A746CC581CD240B200F85BB8 /* NetworkFetch.swift in Sources */,

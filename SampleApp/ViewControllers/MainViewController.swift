@@ -16,13 +16,22 @@
 
 import UIKit
 
+private let CellIdentifier = "CellIdentifier"
+
 class MainViewController: UIViewController {
+    @IBOutlet private var tableView: UITableView!
+    
     var tmdb: TheMovieDatabase!
+    private var cursor: Cursor<Movie>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.title = NSLocalizedString("main.controller.title", comment: "")
+        
+        tableView.registerNib(UINib(nibName: "MovieCell", bundle: nil), forCellReuseIdentifier: CellIdentifier)
+        tableView.estimatedRowHeight = 44
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -31,6 +40,35 @@ class MainViewController: UIViewController {
         tmdb.fetchTopMovies() {
             cursor in
             
+            self.cursor = cursor
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
+            }
         }
     }
+}
+
+extension MainViewController: UITableViewDataSource {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let cursor = cursor else {
+            return 0
+        }
+        
+        return cursor.items.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier) as! MovieCell
+        
+        let movie = cursor!.items[indexPath.row]
+        cell.textLabel?.text = movie.title
+        cell.detailTextLabel?.text = String(format: "%.2f", movie.rating)
+        
+        return cell
+    }
+}
+
+extension MainViewController: UITableViewDelegate {
+    
 }
