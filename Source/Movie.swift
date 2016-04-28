@@ -17,9 +17,9 @@
 import Foundation
 
 public struct Movie {
-    let id: Int
-    let title: String
-    let rating: Float
+    public let id: Int
+    public let title: String
+    public let rating: Float
     
     static func loadFromData(data: [String: AnyObject]) -> Movie? {
         guard let id = data["id"] as? Int else {

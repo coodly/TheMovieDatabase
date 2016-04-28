@@ -16,7 +16,7 @@
 
 import Foundation
 
-public class TheMovieDatabase {
+public class DatabaseConnection {
     private let apiKey: String
     private let fetch: NetworkFetch
     
