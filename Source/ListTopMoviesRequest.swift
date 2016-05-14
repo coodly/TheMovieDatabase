@@ -19,8 +19,15 @@ import Foundation
 private let ListMoviesPath = "/movie/top_rated"
 
 class ListTopMoviesRequest: NetworkRequest {
+    private var page: Int
+    
+    init(page: Int, fetch: NetworkFetch) {
+        self.page = page
+        super.init(fetch: fetch)
+    }
+    
     override func execute() {
-        GET(ListMoviesPath, parameters: ["api_key": apiKey])
+        GET(ListMoviesPath, parameters: ["api_key": apiKey, "page": page])
     }
     
     override func handleSuccessResponse(data: [String : AnyObject]) {

@@ -52,7 +52,18 @@ class NetworkRequest {
             var queryItems = [NSURLQueryItem]()
             
             for (name, value) in parameters {
-                queryItems.append(NSURLQueryItem(name: name, value: value as? String))
+                var encode: String?
+                if let integer = value as? Int {
+                    encode = String(integer)
+                } else if let string = value as? String {
+                    encode = string
+                }
+                
+                guard let toEncode = encode else {
+                    continue
+                }
+                
+                queryItems.append(NSURLQueryItem(name: name, value: toEncode))
             }
             
             components.queryItems = queryItems

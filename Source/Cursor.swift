@@ -17,12 +17,18 @@
 import Foundation
 
 public class Cursor<T> {
-    private var page: Int!
+    internal var page: Int!
+    internal var totalPages: Int!
     public var items: [T]!
     
     class func loadFromData(data: [String: AnyObject], creation: ([String: AnyObject]) -> (T?)) -> Cursor<T>? {
         guard let page = data["page"] as? Int else {
             Logging.log("Page not found from data")
+            return nil
+        }
+        
+        guard let total = data["total_pages"] as? Int else {
+            Logging.log("Total pages not found")
             return nil
         }
         
@@ -43,8 +49,17 @@ public class Cursor<T> {
         let cursor = Cursor<T>()
         
         cursor.page = page
+        cursor.totalPages = total
         cursor.items = elements
         
         return cursor
+    }
+    
+    public func hasMoreResults() -> Bool {
+        return page < totalPages
+    }
+    
+    internal func nextPage() -> Int {
+        return page + 1
     }
 }
