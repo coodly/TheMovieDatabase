@@ -16,7 +16,7 @@
 
 import Foundation
 
-public class DatabaseConnection {
+public class TMDB {
     private let apiKey: String
     private let fetch: NetworkFetch
     
