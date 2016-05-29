@@ -25,6 +25,7 @@ public struct Movie {
 
     public let id: Int
     public let title: String
+    public let originalTitle: String?
     public let rating: Float
     public let releaseDate: NSDate
     
@@ -49,6 +50,8 @@ public struct Movie {
             return nil
         }
         
-        return Movie(id: id, title: title, rating: rating, releaseDate: date)
+        let originalTitle = data["original_title"] as? String
+        
+        return Movie(id: id, title: title, originalTitle: originalTitle, rating: rating, releaseDate: date)
     }
 }
