@@ -16,12 +16,14 @@
 
 import Foundation
 
+private let MoviesPerPage = 20
+
 public class Cursor<T> {
     internal var page: Int!
     internal var totalPages: Int!
     public var items: [T]!
     
-    class func loadFromData(data: [String: AnyObject], creation: ([String: AnyObject]) -> (T?)) -> Cursor<T>? {
+    class func loadFromData(data: [String: AnyObject], creation: (Int, [String: AnyObject]) -> (T?)) -> Cursor<T>? {
         guard let page = data["page"] as? Int else {
             Logging.log("Page not found from data")
             return nil
@@ -37,13 +39,15 @@ public class Cursor<T> {
             return nil
         }
         
+        let loaded = (page - 1) * MoviesPerPage
+        var index = loaded + 1
         var elements = [T]()
         for result in results {
-            guard let created = creation(result) else {
-                continue
+            if let created = creation(index, result) {
+                elements.append(created)
             }
             
-            elements.append(created)
+            index = index + 1
         }
         
         let cursor = Cursor<T>()

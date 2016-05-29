@@ -23,13 +23,14 @@ public struct Movie {
         return formatter
     }()
 
+    public let index: Int
     public let id: Int
     public let title: String
     public let originalTitle: String?
     public let rating: Float
     public let releaseDate: NSDate
     
-    static func loadFromData(data: [String: AnyObject]) -> Movie? {
+    static func loadFromData(index: Int, data: [String: AnyObject]) -> Movie? {
         guard let id = data["id"] as? Int else {
             Logging.log("id not found")
             return nil
@@ -52,6 +53,6 @@ public struct Movie {
         
         let originalTitle = data["original_title"] as? String
         
-        return Movie(id: id, title: title, originalTitle: originalTitle, rating: rating, releaseDate: date)
+        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, rating: rating, releaseDate: date)
     }
 }

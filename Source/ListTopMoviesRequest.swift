@@ -31,10 +31,10 @@ class ListTopMoviesRequest: NetworkRequest {
     }
     
     override func handleSuccessResponse(data: [String : AnyObject]) {
-        let createMovieClosure: ([String: AnyObject]) -> (Movie?) = {
-            data in
+        let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
+            index, data in
             
-            return Movie.loadFromData(data)
+            return Movie.loadFromData(index, data:data)
         }
         
         let cursor = Cursor<Movie>.loadFromData(data, creation: createMovieClosure)
