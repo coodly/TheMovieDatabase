@@ -26,7 +26,7 @@ private enum Method: String {
 class NetworkRequest {
     let fetch: NetworkFetch
     var apiKey: String!
-    var resulthandler: ((AnyObject?, NSError?) -> ())!
+    var resulthandler: ((Any?, NSError?) -> ())!
     
     init(fetch: NetworkFetch) {
         self.fetch = fetch

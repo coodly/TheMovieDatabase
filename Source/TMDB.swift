@@ -35,6 +35,18 @@ public class TMDB {
         fetchTopMovies(cursor.nextPage(), completion: completion)
     }
     
+    public func detailsForMovie(movie: Movie, inclidedDetails details: Details = [], completion: (Movie, NSError?) -> ()) {
+        Logging.log("Fetch details for movie:\(movie)")
+        let request = FetchDetailsRequest(movie: movie, includedDetails: details, fetch: fetch)
+        request.apiKey = apiKey
+        request.resulthandler = {
+            result, error in
+            
+            completion(result as! Movie, error)
+        }
+        request.execute()
+    }
+    
     private func fetchTopMovies(page: Int, completion: (Cursor<Movie> -> ())) {
         Logging.log("Fetch top movies on page: \(page)")
         let listRequest = ListTopMoviesRequest(page: page, fetch: fetch)
