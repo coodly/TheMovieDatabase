@@ -17,8 +17,8 @@
 import Foundation
 
 public struct Director {
-    let id: Int
-    let name: String
+    public let id: Int
+    public let name: String
     
     static func loadFromCredits(data: [String: AnyObject]) -> [Director] {
         guard let crew = data["crew"] as? [[String: AnyObject]] else {
