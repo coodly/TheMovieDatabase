@@ -69,6 +69,9 @@ class FetchDetailsRequest: NetworkRequest {
         if let credits = data["credits"] as? [String: AnyObject] {
             result.directors = Director.loadFromCredits(credits)
         }
+        if let production = data["production_companies"] as? [[String: AnyObject]] {
+            result.productionCompanies = ProductionCompany.loadFromData(production)
+        }
         
         resulthandler(result, nil)
     }

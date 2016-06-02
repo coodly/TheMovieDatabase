@@ -30,6 +30,7 @@ public struct Movie {
     public let rating: Float
     public let releaseDate: NSDate
     public var directors: [Director]?
+    public var productionCompanies: [ProductionCompany]?
     
     static func loadFromData(index: Int, data: [String: AnyObject]) -> Movie? {
         guard let id = data["id"] as? Int else {
@@ -54,6 +55,6 @@ public struct Movie {
         
         let originalTitle = data["original_title"] as? String
         
-        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, rating: rating, releaseDate: date, directors: nil)
+        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, rating: rating, releaseDate: date, directors: nil, productionCompanies: nil)
     }
 }
