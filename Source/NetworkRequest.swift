@@ -82,6 +82,7 @@ class NetworkRequest {
             }
             
             if let data = data {
+                Logging.log("Response \(NSString(data: data, encoding: NSUTF8StringEncoding))")
                 do {
                     let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
                     self.handleSuccessResponse(json as! [String: AnyObject])
@@ -99,7 +100,7 @@ class NetworkRequest {
     }
     
     func handleErrorResponse(error: NSError?) {
-        Logging.log("handleErrorResponse")
+        Logging.log("handleErrorResponse: \(error)")
         resulthandler(nil, error)
     }
 }
