@@ -37,7 +37,12 @@ public class TMDB {
     
     public func detailsForMovie(movie: Movie, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
         Logging.log("Fetch details for movie:\(movie)")
-        let request = FetchDetailsRequest(movie: movie, includedDetails: details, fetch: fetch)
+        detailsForMovie(movie.id, inclidedDetails: details, completion: completion)
+    }
+
+    public func detailsForMovie(movieId: Int, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
+        Logging.log("Fetch details for movieId:\(movieId)")
+        let request = FetchDetailsRequest(movieId: movieId, includedDetails: details, fetch: fetch)
         request.apiKey = apiKey
         request.resulthandler = {
             result, error in
@@ -46,7 +51,7 @@ public class TMDB {
         }
         request.execute()
     }
-    
+
     private func fetchTopMovies(page: Int, completion: (Cursor<Movie> -> ())) {
         Logging.log("Fetch top movies on page: \(page)")
         let listRequest = ListTopMoviesRequest(page: page, fetch: fetch)

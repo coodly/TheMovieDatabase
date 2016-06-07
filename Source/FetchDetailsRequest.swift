@@ -43,17 +43,17 @@ public struct Details: OptionSetType {
 private let MovieDetailsPath = "/movie"
 
 class FetchDetailsRequest: NetworkRequest {
-    private let movie: Movie
+    private let movieId: Int
     private let include: Details
     
-    init(movie: Movie, includedDetails: Details, fetch: NetworkFetch) {
-        self.movie = movie
+    init(movieId: Int, includedDetails: Details, fetch: NetworkFetch) {
+        self.movieId = movieId
         self.include = includedDetails
         super.init(fetch: fetch)
     }
     
     override func execute() {
-        let path = "\(MovieDetailsPath)/\(movie.id)"
+        let path = "\(MovieDetailsPath)/\(movieId)"
         let append = appendForDetails(include)
         
         var params = ["api_key": apiKey]
@@ -65,7 +65,11 @@ class FetchDetailsRequest: NetworkRequest {
     }
     
     override func handleSuccessResponse(data: [String : AnyObject]) {
-        var result = movie
+        guard var result = Movie.loadFromData(0, data: data) else {
+            resulthandler(nil, nil)
+            return
+        }
+        
         if let credits = data["credits"] as? [String: AnyObject] {
             result.directors = Director.loadFromCredits(credits)
         }
