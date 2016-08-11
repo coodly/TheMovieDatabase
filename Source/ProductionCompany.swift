@@ -20,7 +20,7 @@ public struct ProductionCompany {
     public let id: Int
     public let name: String
     
-    static func loadFromData(data: [[String: AnyObject]]) -> [ProductionCompany] {
+    static func loadFromData(_ data: [[String: AnyObject]]) -> [ProductionCompany] {
         var result = [ProductionCompany]()
         for company in data {
             guard let name = company["name"] as? String else {

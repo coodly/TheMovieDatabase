@@ -36,20 +36,20 @@ class NetworkRequest {
         fatalError("Override \(#function)")
     }
     
-    func GET(path: String, parameters: [String: AnyObject]? = nil) {
+    func GET(_ path: String, parameters: [String: AnyObject]? = nil) {
         executeMethod(.GET, path: path, parameters: parameters)
     }
     
-    func POST(path: String, parameters: [String: AnyObject]? = nil) {
+    func POST(_ path: String, parameters: [String: AnyObject]? = nil) {
         executeMethod(.POST, path: path, parameters: parameters)
     }
     
-    private func executeMethod(method: Method, path: String, parameters: [String: AnyObject]?) {
-        let components = NSURLComponents(URL: NSURL(string: APIServer)!, resolvingAgainstBaseURL: true)!
-        components.path = components.path!.stringByAppendingString(path)
+    private func executeMethod(_ method: Method, path: String, parameters: [String: AnyObject]?) {
+        var components = URLComponents(url: URL(string: APIServer)!, resolvingAgainstBaseURL: true)!
+        components.path = components.path + path
         
         if let parameters = parameters {
-            var queryItems = [NSURLQueryItem]()
+            var queryItems = [URLQueryItem]()
             
             for (name, value) in parameters {
                 var encode: String?
@@ -63,17 +63,17 @@ class NetworkRequest {
                     continue
                 }
                 
-                queryItems.append(NSURLQueryItem(name: name, value: toEncode))
+                queryItems.append(URLQueryItem(name: name, value: toEncode))
             }
             
             components.queryItems = queryItems
         }
         
-        let requestURL = components.URL!
-        let request = NSMutableURLRequest(URL: requestURL)
-        request.HTTPMethod = method.rawValue
+        let requestURL = components.url!
+        let request = NSMutableURLRequest(url: requestURL)
+        request.httpMethod = method.rawValue
         
-        fetch.fetchRequest(request) {
+        fetch.fetchRequest(request as URLRequest) {
             data, code, error in
             
             if let error = error {
@@ -82,9 +82,10 @@ class NetworkRequest {
             }
             
             if let data = data {
-                Logging.log("Response \(NSString(data: data, encoding: NSUTF8StringEncoding))")
+                
+                Logging.log("Response \(String(data: data, encoding: String.Encoding.utf8))")
                 do {
-                    let json = try NSJSONSerialization.JSONObjectWithData(data, options: [])
+                    let json = try JSONSerialization.jsonObject(with: data, options: [])
                     self.handleSuccessResponse(json as! [String: AnyObject])
                 } catch let error as NSError {
                     self.handleErrorResponse(error)
@@ -95,11 +96,11 @@ class NetworkRequest {
         }
     }
     
-    func handleSuccessResponse(data: [String: AnyObject]) {
+    func handleSuccessResponse(_ data: [String: AnyObject]) {
         Logging.log("handleSuccessResponse")
     }
     
-    func handleErrorResponse(error: NSError?) {
+    func handleErrorResponse(_ error: NSError?) {
         Logging.log("handleErrorResponse: \(error)")
         resulthandler(nil, error)
     }

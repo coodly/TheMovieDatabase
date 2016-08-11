@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Details: OptionSetType {
+public struct Details: OptionSet {
     public let rawValue : Int
     let key: String
     
@@ -56,7 +56,7 @@ class FetchDetailsRequest: NetworkRequest {
         let path = "\(MovieDetailsPath)/\(movieId)"
         let append = appendForDetails(include)
         
-        var params = ["api_key": apiKey]
+        var params: [String: AnyObject] = ["api_key": apiKey]
         if append.characters.count > 0 {
             params["append_to_response"] = append
         }
@@ -64,7 +64,7 @@ class FetchDetailsRequest: NetworkRequest {
         GET(path, parameters: params)
     }
     
-    override func handleSuccessResponse(data: [String : AnyObject]) {
+    override func handleSuccessResponse(_ data: [String : AnyObject]) {
         guard var result = Movie.loadFromData(0, data: data) else {
             resulthandler(nil, nil)
             return
@@ -80,7 +80,7 @@ class FetchDetailsRequest: NetworkRequest {
         resulthandler(result, nil)
     }
     
-    private func appendForDetails(include: Details) -> String {
+    private func appendForDetails(_ include: Details) -> String {
         var append = [String]()
         
         for check in Details.allValues {
@@ -91,6 +91,6 @@ class FetchDetailsRequest: NetworkRequest {
             append.append(check.key)
         }
         
-        return append.joinWithSeparator(",")
+        return append.joined(separator: ",")
     }
 }

@@ -20,7 +20,7 @@ public struct Director {
     public let id: Int
     public let name: String
     
-    static func loadFromCredits(data: [String: AnyObject]) -> [Director] {
+    static func loadFromCredits(_ data: [String: AnyObject]) -> [Director] {
         guard let crew = data["crew"] as? [[String: AnyObject]] else {
             return []
         }
@@ -42,7 +42,7 @@ public struct Director {
         return result
     }
     
-    static func loadFromData(data: [String: AnyObject]) -> Director? {
+    static func loadFromData(_ data: [String: AnyObject]) -> Director? {
         guard let name = data["name"] as? String else {
             return nil
         }

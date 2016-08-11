@@ -25,22 +25,22 @@ public class TMDB {
         fetch = networkFetch
     }
     
-    public func fetchTopMovies(completion: (Cursor<Movie>) -> ()) {
+    public func fetchTopMovies(_ completion: (Cursor<Movie>) -> ()) {
         Logging.log("Fetch top movies")
         fetchTopMovies(1, completion: completion)
     }
     
-    public func fetchNextPage(cursor: Cursor<Movie>, completion: (Cursor<Movie> -> ())) {
+    public func fetchNextPage(_ cursor: Cursor<Movie>, completion: ((Cursor<Movie>) -> ())) {
         Logging.log("Fetch next page")
         fetchTopMovies(cursor.nextPage(), completion: completion)
     }
     
-    public func detailsForMovie(movie: Movie, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
+    public func detailsForMovie(_ movie: Movie, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
         Logging.log("Fetch details for movie:\(movie)")
         detailsForMovie(movie.id, inclidedDetails: details, completion: completion)
     }
 
-    public func detailsForMovie(movieId: Int, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
+    public func detailsForMovie(_ movieId: Int, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
         Logging.log("Fetch details for movieId:\(movieId)")
         let request = FetchDetailsRequest(movieId: movieId, includedDetails: details, fetch: fetch)
         request.apiKey = apiKey
@@ -52,7 +52,7 @@ public class TMDB {
         request.execute()
     }
 
-    private func fetchTopMovies(page: Int, completion: (Cursor<Movie> -> ())) {
+    private func fetchTopMovies(_ page: Int, completion: ((Cursor<Movie>) -> ())) {
         Logging.log("Fetch top movies on page: \(page)")
         let listRequest = ListTopMoviesRequest(page: page, fetch: fetch)
         listRequest.apiKey = apiKey

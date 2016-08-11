@@ -23,7 +23,7 @@ public class Cursor<T> {
     internal var totalPages: Int!
     public var items: [T]!
     
-    class func loadFromData(data: [String: AnyObject], creation: (Int, [String: AnyObject]) -> (T?)) -> Cursor<T>? {
+    class func loadFromData(_ data: [String: AnyObject], creation: (Int, [String: AnyObject]) -> (T?)) -> Cursor<T>? {
         guard let page = data["page"] as? Int else {
             Logging.log("Page not found from data")
             return nil

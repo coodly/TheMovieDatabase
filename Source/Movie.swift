@@ -17,8 +17,8 @@
 import Foundation
 
 public struct Movie {
-    private static let dateFormatter: NSDateFormatter =  {
-        let formatter = NSDateFormatter()
+    private static let dateFormatter: DateFormatter =  {
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()
@@ -28,11 +28,11 @@ public struct Movie {
     public let title: String
     public let originalTitle: String?
     public let rating: Float
-    public let releaseDate: NSDate
+    public let releaseDate: Date
     public var directors: [Director]?
     public var productionCompanies: [ProductionCompany]?
     
-    static func loadFromData(index: Int, data: [String: AnyObject]) -> Movie? {
+    static func loadFromData(_ index: Int, data: [String: AnyObject]) -> Movie? {
         guard let id = data["id"] as? Int else {
             Logging.log("id not found")
             return nil
@@ -48,7 +48,7 @@ public struct Movie {
             return nil
         }
         
-        guard let releaseDate = data["release_date"] as? String, date  = Movie.dateFormatter.dateFromString(releaseDate) else {
+        guard let releaseDate = data["release_date"] as? String, date  = Movie.dateFormatter.date(from: releaseDate) else {
             Logging.log("Release date not found")
             return nil
         }

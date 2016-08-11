@@ -30,7 +30,7 @@ class ListTopMoviesRequest: NetworkRequest {
         GET(ListMoviesPath, parameters: ["api_key": apiKey, "page": page])
     }
     
-    override func handleSuccessResponse(data: [String : AnyObject]) {
+    override func handleSuccessResponse(_ data: [String : AnyObject]) {
         let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
             index, data in
             
