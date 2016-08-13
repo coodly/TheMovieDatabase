@@ -27,6 +27,8 @@ public struct Movie {
     public let id: Int
     public let title: String
     public let originalTitle: String?
+    public let posterPath: String?
+    public let backdropPath: String?
     public let rating: Float
     public let releaseDate: Date
     public var directors: [Director]?
@@ -54,7 +56,9 @@ public struct Movie {
         }
         
         let originalTitle = data["original_title"] as? String
+        let posterPath = data["poster_path"] as? String
+        let backdropPath = data["backdrop_path"] as? String
         
-        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, rating: rating, releaseDate: date, directors: nil, productionCompanies: nil)
+        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, posterPath: posterPath, backdropPath: backdropPath, rating: rating, releaseDate: date, directors: nil, productionCompanies: nil)
     }
 }
