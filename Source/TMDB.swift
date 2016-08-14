@@ -19,6 +19,7 @@ import Foundation
 public class TMDB {
     private let apiKey: String
     private let fetch: NetworkFetch
+    private var configuration: Configuration?
     
     public init(apiKey: String, networkFetch: NetworkFetch) {
         self.apiKey = apiKey
@@ -35,12 +36,12 @@ public class TMDB {
         fetchTopMovies(cursor.nextPage(), completion: completion)
     }
     
-    public func detailsForMovie(_ movie: Movie, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
+    public func detailsFor(movie: Movie, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
         Logging.log("Fetch details for movie:\(movie)")
-        detailsForMovie(movie.id, inclidedDetails: details, completion: completion)
+        detailsFor(movieId: movie.id, inclidedDetails: details, completion: completion)
     }
 
-    public func detailsForMovie(_ movieId: Int, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
+    public func detailsFor(movieId: Int, inclidedDetails details: Details = [], completion: (Movie?, NSError?) -> ()) {
         Logging.log("Fetch details for movieId:\(movieId)")
         let request = FetchDetailsRequest(movieId: movieId, includedDetails: details, fetch: fetch)
         request.apiKey = apiKey
@@ -63,6 +64,26 @@ public class TMDB {
                 completion(cursor)
             }
         }
-        listRequest.execute()
+        runWithConfigCheck(request: listRequest)
+    }
+    
+    private func runWithConfigCheck(request: NetworkRequest) {
+        if let c = configuration {
+            request.execute()
+            return
+        }
+        
+        let configRequest = ConfigurationsRequest(fetch: fetch)
+        configRequest.apiKey = apiKey
+        configRequest.resulthandler = {
+            result, error in
+
+            if let config = result as? Configuration {
+                self.configuration = config
+            }
+            
+            request.execute()
+        }
+        configRequest.execute()
     }
 }
