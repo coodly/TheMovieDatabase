@@ -19,4 +19,69 @@ import Foundation
 struct Configuration {
     let backdropConfig: ImageConfiguration
     let posterConfig: ImageConfiguration
+    let time: Date?
+    
+    func write() {
+        let dict = [
+            "time": time!.timeIntervalSince1970,
+            "backdrop": ["base": backdropConfig.baseURL, "sizes": backdropConfig.sizes],
+            "poster": ["base": posterConfig.baseURL, "sizes": posterConfig.sizes]
+        ]
+        let data = try! JSONSerialization.data(withJSONObject: dict)
+        try! data.write(to: Configuration.condigFilePath)
+        Logging.log("Confit saved to \(Configuration.condigFilePath)")
+    }
+    
+    static func load() -> Configuration? {
+        let path = condigFilePath
+        guard FileManager.default.fileExists(atPath: path.path) else {
+            Logging.log("No config file")
+            return nil
+        }
+        
+        do {
+            let data = try Data(contentsOf: path)
+            let content = try JSONSerialization.jsonObject(with: data)
+            
+            guard let time = content["time"] as? TimeInterval else {
+                return nil
+            }
+            
+            guard let back = content["backdrop"] as? [String: AnyObject], let backBase = back["base"] as? String, let backSizes = back["sizes"] as? [String] else {
+                return nil
+            }
+
+            guard let poster = content["poster"] as? [String: AnyObject], let posterBase = poster["base"] as? String, let posterSizes = poster["sizes"] as? [String] else {
+                return nil
+            }
+
+            let backdrop = ImageConfiguration(baseURL: backBase, sizes: backSizes)
+            let posterConfig = ImageConfiguration(baseURL: posterBase, sizes: posterSizes)
+            let result = Configuration(backdropConfig: backdrop, posterConfig: posterConfig, time: Date(timeIntervalSince1970: time))
+            Logging.log("Did load \(result)")
+            return result
+        } catch {
+            Logging.log("Load error: \(error)")
+            return nil
+        }
+    }
+    
+    private static var condigFilePath: URL = {
+        return workingFilesDirectory.appendingPathComponent("Configuration.json")
+    }()
+    
+    private static var workingFilesDirectory: URL = {
+        let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+        let last = urls.last!
+        let identifier = Bundle.main.bundleIdentifier!
+        let dbIdentifier = identifier + ".tmdb"
+        let dbFolder = last.appendingPathComponent(dbIdentifier)
+        do {
+            try FileManager.default.createDirectory(at: dbFolder, withIntermediateDirectories: true, attributes: nil)
+        } catch let error as NSError {
+            Logging.log("Create tmdb folder error \(error)")
+        }
+        return dbFolder
+    }()
+
 }

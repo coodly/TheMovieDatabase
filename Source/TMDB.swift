@@ -68,6 +68,10 @@ public class TMDB {
     }
     
     private func runWithConfigCheck(request: NetworkRequest) {
+        if configuration == nil {
+            configuration = Configuration.load()
+        }
+        
         if let c = configuration {
             request.execute()
             return
@@ -80,6 +84,7 @@ public class TMDB {
 
             if let config = result as? Configuration {
                 self.configuration = config
+                config.write()
             }
             
             request.execute()

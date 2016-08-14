@@ -51,6 +51,6 @@ class ConfigurationsRequest: NetworkRequest {
     
         let backConfig = ImageConfiguration(baseURL: base, sizes: backdropSizes)
         let posterConfig = ImageConfiguration(baseURL: base, sizes: posterSizes)
-        result = Configuration(backdropConfig: backConfig, posterConfig: posterConfig)
+        result = Configuration(backdropConfig: backConfig, posterConfig: posterConfig, time: Date())
     }
 }
