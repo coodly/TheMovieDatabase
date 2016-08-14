@@ -67,12 +67,13 @@ public class TMDB {
         runWithConfigCheck(request: listRequest)
     }
     
-    private func runWithConfigCheck(request: NetworkRequest) {
+    private func runWithConfigCheck(request: ListTopMoviesRequest) {
         if configuration == nil {
             configuration = Configuration.load()
         }
         
         if let c = configuration {
+            request.configuration = c
             request.execute()
             return
         }
@@ -87,6 +88,7 @@ public class TMDB {
                 config.write()
             }
             
+            request.configuration = self.configuration
             request.execute()
         }
         configRequest.execute()

@@ -20,6 +20,7 @@ private let ListMoviesPath = "/movie/top_rated"
 
 class ListTopMoviesRequest: NetworkRequest {
     private var page: Int
+    var configuration: Configuration!
     
     init(page: Int, fetch: NetworkFetch) {
         self.page = page
@@ -34,7 +35,7 @@ class ListTopMoviesRequest: NetworkRequest {
         let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
             index, data in
             
-            return Movie.loadFromData(index, data:data)
+            return Movie.loadFromData(index, data:data, config: self.configuration, apiKey: self.apiKey)
         }
         
         let cursor = Cursor<Movie>.loadFromData(data, creation: createMovieClosure)
