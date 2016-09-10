@@ -28,7 +28,7 @@ class ListTopMoviesRequest: NetworkRequest {
     }
     
     override func execute() {
-        GET(ListMoviesPath, parameters: ["api_key": apiKey, "page": page])
+        GET(ListMoviesPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject])
     }
     
     override func handleSuccessResponse(_ data: [String : AnyObject]) {

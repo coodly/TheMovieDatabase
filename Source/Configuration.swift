@@ -22,10 +22,10 @@ struct Configuration {
     let time: Date?
     
     func write() {
-        let dict = [
-            "time": time!.timeIntervalSince1970,
-            "backdrop": ["base": backdropConfig.baseURL, "sizes": backdropConfig.sizes],
-            "poster": ["base": posterConfig.baseURL, "sizes": posterConfig.sizes]
+        let dict: [String: AnyObject] = [
+            "time": time!.timeIntervalSince1970 as AnyObject,
+            "backdrop": ["base": backdropConfig.baseURL, "sizes": backdropConfig.sizes] as AnyObject,
+            "poster": ["base": posterConfig.baseURL, "sizes": posterConfig.sizes] as AnyObject
         ]
         let data = try! JSONSerialization.data(withJSONObject: dict)
         try! data.write(to: Configuration.condigFilePath)
@@ -41,7 +41,9 @@ struct Configuration {
         
         do {
             let data = try Data(contentsOf: path)
-            let content = try JSONSerialization.jsonObject(with: data)
+            guard let content = try JSONSerialization.jsonObject(with: data) as? [String: AnyObject] else {
+                return nil
+            }
             
             guard let time = content["time"] as? TimeInterval else {
                 return nil

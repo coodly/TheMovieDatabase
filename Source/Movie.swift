@@ -50,7 +50,7 @@ public struct Movie {
             return nil
         }
         
-        guard let releaseDate = data["release_date"] as? String, date  = Movie.dateFormatter.date(from: releaseDate) else {
+        guard let releaseDate = data["release_date"] as? String, let date  = Movie.dateFormatter.date(from: releaseDate) else {
             Logging.log("Release date not found")
             return nil
         }

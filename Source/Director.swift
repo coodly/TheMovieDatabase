@@ -28,7 +28,7 @@ public struct Director {
         
         var result = [Director]()
         for member in crew {
-            guard let job = member["job"] as? String where job == "Director" else {
+            guard let job = member["job"] as? String, job == "Director" else {
                 continue
             }
             

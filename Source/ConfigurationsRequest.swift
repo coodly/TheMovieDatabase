@@ -20,7 +20,7 @@ private let ConfigurationsPath = "/configuration"
 
 class ConfigurationsRequest: NetworkRequest {
     override func execute() {
-        GET(ConfigurationsPath, parameters: ["api_key": apiKey])
+        GET(ConfigurationsPath, parameters: ["api_key": apiKey as AnyObject])
     }
     
     override func handleSuccessResponse(_ data: [String : AnyObject]) {

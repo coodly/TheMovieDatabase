@@ -56,9 +56,9 @@ class FetchDetailsRequest: NetworkRequest {
         let path = "\(MovieDetailsPath)/\(movieId)"
         let append = appendForDetails(include)
         
-        var params: [String: AnyObject] = ["api_key": apiKey]
+        var params: [String: AnyObject] = ["api_key": apiKey as AnyObject]
         if append.characters.count > 0 {
-            params["append_to_response"] = append
+            params["append_to_response"] = append as AnyObject?
         }
         
         GET(path, parameters: params)
