@@ -28,12 +28,12 @@ public class TMDB {
     
     public func fetchTopMovies(_ completion: @escaping (Cursor<Movie>) -> ()) {
         Logging.log("Fetch top movies")
-        fetchTopMovies(1, completion: completion)
+        fetchTopMovies(page: 1, completion: completion)
     }
     
     public func fetchNextPage(_ cursor: Cursor<Movie>, completion: @escaping ((Cursor<Movie>) -> ())) {
         Logging.log("Fetch next page")
-        fetchTopMovies(cursor.nextPage(), completion: completion)
+        fetchTopMovies(page: cursor.nextPage(), completion: completion)
     }
     
     public func detailsFor(movie: Movie, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
@@ -53,7 +53,7 @@ public class TMDB {
         request.execute()
     }
 
-    private func fetchTopMovies(_ page: Int, completion: @escaping ((Cursor<Movie>) -> ())) {
+    public func fetchTopMovies(page: Int, completion: @escaping ((Cursor<Movie>) -> ())) {
         Logging.log("Fetch top movies on page: \(page)")
         let listRequest = ListTopMoviesRequest(page: page, fetch: fetch)
         listRequest.apiKey = apiKey
