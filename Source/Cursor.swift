@@ -19,7 +19,7 @@ import Foundation
 private let MoviesPerPage = 20
 
 public class Cursor<T> {
-    internal var page: Int!
+    public var page: Int!
     internal var totalPages: Int!
     public var items: [T]!
     
