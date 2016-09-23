@@ -37,4 +37,23 @@ public struct Image {
         let result = "\(config.baseURL)\(usedSize)\(path)?api_key=\(apiKey)"
         return URL(string: result)
     }
+    
+    public func url(matching width: Int) -> URL? {
+        guard let conf = config else {
+            return nil
+        }
+        
+        for size in conf.sizes {
+            let stripped = size.replacingOccurrences(of: "w", with: "")
+            guard let value = Int(stripped) else {
+                continue
+            }
+            
+            if value > width {
+                return url(for: size)
+            }
+        }
+        
+        return url()
+    }
 }
