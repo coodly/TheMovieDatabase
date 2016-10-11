@@ -45,6 +45,7 @@ public class TMDB {
         Logging.log("Fetch details for movieId:\(movieId)")
         let request = FetchDetailsRequest(movieId: movieId, includedDetails: details, fetch: fetch)
         request.apiKey = apiKey
+        request.configuration = configuration
         request.resulthandler = {
             result, error in
             

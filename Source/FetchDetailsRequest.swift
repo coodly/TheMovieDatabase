@@ -45,6 +45,7 @@ private let MovieDetailsPath = "/movie"
 class FetchDetailsRequest: NetworkRequest {
     private let movieId: Int
     private let include: Details
+    var configuration: Configuration!
     
     init(movieId: Int, includedDetails: Details, fetch: NetworkFetch) {
         self.movieId = movieId
@@ -65,7 +66,7 @@ class FetchDetailsRequest: NetworkRequest {
     }
     
     override func handleSuccessResponse(_ data: [String : AnyObject]) {
-        guard var result = Movie.loadFromData(0, data: data) else {
+        guard var result = Movie.loadFromData(0, data: data, config: self.configuration, apiKey: self.apiKey) else {
             resulthandler(nil, nil)
             return
         }
