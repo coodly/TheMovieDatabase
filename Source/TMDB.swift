@@ -16,14 +16,10 @@
 
 import Foundation
 
-public class TMDB {
-    private let apiKey: String
-    private let fetch: NetworkFetch
-    private var configuration: Configuration?
-    
+public class TMDB: InjectionHandler {
     public init(apiKey: String, networkFetch: NetworkFetch) {
-        self.apiKey = apiKey
-        fetch = networkFetch
+        Injector.sharedInsatnce.apiKey = apiKey
+        Injector.sharedInsatnce.networkFetch = networkFetch
     }
     
     public func fetchTopMovies(_ completion: @escaping (Cursor<Movie>) -> ()) {
@@ -43,9 +39,8 @@ public class TMDB {
 
     public func detailsFor(movieId: Int, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
         Logging.log("Fetch details for movieId:\(movieId)")
-        let request = FetchDetailsRequest(movieId: movieId, includedDetails: details, fetch: fetch)
-        request.apiKey = apiKey
-        request.configuration = configuration
+        let request = FetchDetailsRequest(movieId: movieId, includedDetails: details)
+        inject(into: request)
         request.resulthandler = {
             result, error in
             
@@ -56,8 +51,7 @@ public class TMDB {
 
     public func fetchTopMovies(page: Int, completion: @escaping ((Cursor<Movie>) -> ())) {
         Logging.log("Fetch top movies on page: \(page)")
-        let listRequest = ListTopMoviesRequest(page: page, fetch: fetch)
-        listRequest.apiKey = apiKey
+        let listRequest = ListTopMoviesRequest(page: page)
         listRequest.resulthandler = {
             result, error in
             
@@ -69,29 +63,43 @@ public class TMDB {
     }
     
     private func runWithConfigCheck(request: ListTopMoviesRequest) {
-        if configuration == nil {
-            configuration = Configuration.load()
+        let injectAndRunClosure = {
+            self.inject(into: request)
+            request.execute()
         }
         
-        if let c = configuration {
-            request.configuration = c
-            request.execute()
+        if Injector.sharedInsatnce.configuration != nil {
+            injectAndRunClosure()
             return
         }
         
-        let configRequest = ConfigurationsRequest(fetch: fetch)
-        configRequest.apiKey = apiKey
+        let configRequest = ConfigurationsRequest()
         configRequest.resulthandler = {
             result, error in
 
             if let config = result as? Configuration {
-                self.configuration = config
+                Injector.sharedInsatnce.configuration = config
                 config.write()
             }
             
-            request.configuration = self.configuration
-            request.execute()
+            injectAndRunClosure()
         }
         configRequest.execute()
+    }
+}
+
+// MARK: -
+// MARK: Movie genres
+public extension TMDB {
+    public func listMovieGenres(completion: @escaping ([Genre]) -> ()) {
+        let request = ListMovieGenresRequest()
+        inject(into: request)
+        request.resulthandler = {
+            result, error in
+            
+            let genres = result as? [Genre]
+            completion(genres ?? [])
+        }
+        request.execute()
     }
 }

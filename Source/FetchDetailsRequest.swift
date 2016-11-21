@@ -42,15 +42,14 @@ public struct Details: OptionSet {
 
 private let MovieDetailsPath = "/movie"
 
-class FetchDetailsRequest: NetworkRequest {
+class FetchDetailsRequest: NetworkRequest, ConfigurationConsumer {
     private let movieId: Int
     private let include: Details
     var configuration: Configuration!
     
-    init(movieId: Int, includedDetails: Details, fetch: NetworkFetch) {
+    init(movieId: Int, includedDetails: Details) {
         self.movieId = movieId
         self.include = includedDetails
-        super.init(fetch: fetch)
     }
     
     override func execute() {

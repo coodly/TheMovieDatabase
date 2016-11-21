@@ -16,28 +16,29 @@
 
 import Foundation
 
-private let ListMoviesPath = "/movie/top_rated"
+private let ListMovieGenresPath = "/genre/movie/list"
 
-class ListTopMoviesRequest: NetworkRequest, ConfigurationConsumer {
-    private var page: Int
-    var configuration: Configuration!
-    
-    init(page: Int) {
-        self.page = page
-    }
-    
+class ListMovieGenresRequest: NetworkRequest {
     override func execute() {
-        GET(ListMoviesPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject])
+        GET(ListMovieGenresPath, parameters: ["api_key": apiKey as AnyObject])
     }
     
     override func handleSuccessResponse(_ data: [String : AnyObject]) {
-        let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
-            index, data in
-            
-            return Movie.loadFromData(index, data:data, config: self.configuration, apiKey: self.apiKey)
+        guard let genres = data["genres"] as? [[String: AnyObject]] else {
+            resulthandler(nil, nil)
+            Logging.log("No genres element")
+            return
         }
         
-        let cursor = Cursor<Movie>.loadFromData(data, creation: createMovieClosure)
-        resulthandler(cursor, nil)
+        var result = [Genre]()
+        for genre in genres {
+            guard let g = Genre(data: genre) else {
+                continue
+            }
+            
+            result.append(g)
+        }
+        
+        resulthandler(result, nil)
     }
 }
