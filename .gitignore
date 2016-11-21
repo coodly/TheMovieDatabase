@@ -2,3 +2,7 @@ project.xcworkspace
 xcuserdata
 .idea
 .DS_Store
+.DS_Store
+/.build
+/Packages
+/*.xcodeproj
