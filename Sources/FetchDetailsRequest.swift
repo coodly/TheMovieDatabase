@@ -64,7 +64,7 @@ class FetchDetailsRequest: NetworkRequest, ConfigurationConsumer {
         GET(path, parameters: params)
     }
     
-    override func handleSuccessResponse(_ data: [String : AnyObject]) {
+    override func handle(success data: [String : AnyObject]) {
         guard var result = Movie.loadFromData(0, data: data, config: self.configuration, apiKey: self.apiKey) else {
             resulthandler(nil, nil)
             return

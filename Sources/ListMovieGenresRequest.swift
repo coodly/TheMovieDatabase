@@ -18,13 +18,13 @@ import Foundation
 
 private let ListMovieGenresPath = "/genre/movie/list"
 
-class ListMovieGenresRequest: NetworkRequest {
+internal class ListMovieGenresRequest: NetworkRequest {
     override func execute() {
         GET(ListMovieGenresPath, parameters: ["api_key": apiKey as AnyObject])
     }
     
-    override func handleSuccessResponse(_ data: [String : AnyObject]) {
-        guard let genres = data["genres"] as? [[String: AnyObject]] else {
+    override func handle(success response: [String : AnyObject]) {
+        guard let genres = response["genres"] as? [[String: AnyObject]] else {
             resulthandler(nil, nil)
             Logging.log("No genres element")
             return

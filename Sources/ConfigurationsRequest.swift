@@ -23,7 +23,7 @@ class ConfigurationsRequest: NetworkRequest {
         GET(ConfigurationsPath, parameters: ["api_key": apiKey as AnyObject])
     }
     
-    override func handleSuccessResponse(_ data: [String : AnyObject]) {
+    override func handle(success data: [String : AnyObject]) {
         var result: Configuration? = nil
         defer {
             resulthandler(result, nil)

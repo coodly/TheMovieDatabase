@@ -16,18 +16,18 @@
 
 import Foundation
 
-private let ListMoviesPath = "/movie/top_rated"
+private let MovieDiscoverPath = "/discover/movie"
 
-internal class ListTopMoviesRequest: NetworkRequest, ConfigurationConsumer {
-    private var page: Int
+internal class MoviesDiscoverRequest: NetworkRequest, ConfigurationConsumer {
     var configuration: Configuration!
     
-    init(page: Int) {
-        self.page = page
+    private let genreId: Int
+    init(genreId: Int) {
+        self.genreId = genreId
     }
     
     override func execute() {
-        GET(ListMoviesPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject])
+        GET(MovieDiscoverPath, parameters: ["api_key": apiKey as AnyObject, "sort_by": "popularity.desc" as AnyObject, "include_adult": false as AnyObject, "include_video": true as AnyObject])
     }
     
     override func handle(success response: [String : AnyObject]) {
