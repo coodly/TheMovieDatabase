@@ -106,8 +106,8 @@ public extension TMDB {
         movies(for: genre.id, completion: completion)
     }
 
-    public func movies(for genreId: Int, completion: @escaping ((Cursor<Movie>) -> ())) {
-        let request = MoviesDiscoverRequest(genreId: genreId)
+    public func movies(for genreId: Int, on page: Int = 1, completion: @escaping ((Cursor<Movie>) -> ())) {
+        let request = MoviesDiscoverRequest(genreId: genreId, page: page)
         inject(into: request)
         request.resulthandler = {
             cursor, error in

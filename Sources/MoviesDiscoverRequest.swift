@@ -22,12 +22,15 @@ internal class MoviesDiscoverRequest: NetworkRequest, ConfigurationConsumer {
     var configuration: Configuration!
     
     private let genreId: Int
-    init(genreId: Int) {
+    private let page: Int
+    
+    init(genreId: Int, page: Int) {
         self.genreId = genreId
+        self.page = page
     }
     
     override func execute() {
-        GET(MovieDiscoverPath, parameters: ["api_key": apiKey as AnyObject, "sort_by": "popularity.desc" as AnyObject, "include_adult": false as AnyObject, "include_video": true as AnyObject])
+        GET(MovieDiscoverPath, parameters: ["api_key": apiKey as AnyObject, "sort_by": "popularity.desc" as AnyObject, "include_adult": false as AnyObject, "include_video": true as AnyObject, "page": page as AnyObject, "with_genres": genreId as AnyObject])
     }
     
     override func handle(success response: [String : AnyObject]) {
