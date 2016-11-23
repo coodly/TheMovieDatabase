@@ -56,6 +56,7 @@ public class TMDB: InjectionHandler {
         }
         
         let configRequest = ConfigurationsRequest()
+        inject(into: configRequest)
         configRequest.resulthandler = {
             result, error in
 
