@@ -21,9 +21,8 @@ public protocol Logger {
 }
 
 public class Logging {
-    private var logger: Logger?
-    
-    internal static let sharedInstance = Logging()
+    private var logger: Logger?    
+    private static let sharedInstance = Logging()
     
     public class func set(logger: Logger) {
         sharedInstance.logger = logger

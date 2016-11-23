@@ -44,7 +44,7 @@ public class TMDB: InjectionHandler {
         request.execute()
     }
     
-    fileprivate func runWithConfigCheck(request: ListTopMoviesRequest) {
+    fileprivate func runWithConfigCheck(request: NetworkRequest) {
         let injectAndRunClosure = {
             self.inject(into: request)
             request.execute()
@@ -76,6 +76,23 @@ public extension TMDB {
     public func fetchTopMovies(on page: Int = 1, completion: @escaping ((Cursor<Movie>) -> ())) {
         Logging.log("Fetch top movies on page: \(page)")
         let listRequest = ListTopMoviesRequest(page: page)
+        listRequest.resulthandler = {
+            result, error in
+            
+            if let cursor = result as? Cursor<Movie> {
+                completion(cursor)
+            }
+        }
+        runWithConfigCheck(request: listRequest)
+    }
+}
+
+// MARK: -
+// MARK: Popular
+public extension TMDB {
+    public func popular(on page: Int = 1, completion: @escaping ((Cursor<Movie>) -> ())) {
+        Logging.log("Fetch popular on page \(page)")
+        let listRequest = ListPopularMoviesRequest(page: page)
         listRequest.resulthandler = {
             result, error in
             
