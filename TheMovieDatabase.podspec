@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'TheMovieDatabase'
-  s.version = '0.1.0'
+  s.version = '0.3.0'
   s.license = 'Apache 2'
   s.summary = 'Swift interface for The Movie Database'
   s.homepage = 'https://github.com/coodly/TheMovieDatabase'
