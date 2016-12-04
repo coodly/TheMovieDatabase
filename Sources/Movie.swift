@@ -50,9 +50,11 @@ public struct Movie {
             return nil
         }
         
-        guard let releaseDate = data["release_date"] as? String, let date  = Movie.dateFormatter.date(from: releaseDate) else {
-            Logging.log("Release date not found")
-            return nil
+        let releaseDate: Date
+        if let dateString = data["release_date"] as? String, let date = Movie.dateFormatter.date(from: dateString) {
+            releaseDate = date
+        } else {
+            releaseDate = Date.distantPast
         }
         
         let originalTitle = data["original_title"] as? String
@@ -61,6 +63,6 @@ public struct Movie {
         let backdropPath = data["backdrop_path"] as? String
         let backdrop = Image(path: backdropPath, config: config?.backdropConfig, apiKey: apiKey)
         
-        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, poster: poster, backdrop: backdrop, rating: rating, releaseDate: date, directors: nil, productionCompanies: nil)
+        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, poster: poster, backdrop: backdrop, rating: rating, releaseDate: releaseDate, directors: nil, productionCompanies: nil)
     }
 }
