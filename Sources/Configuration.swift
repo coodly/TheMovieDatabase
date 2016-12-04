@@ -75,7 +75,7 @@ struct Configuration {
     private static var workingFilesDirectory: URL = {
         let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
         let last = urls.last!
-        let identifier = Bundle.main.bundleIdentifier!
+        let identifier = Bundle.main.bundleIdentifier ?? "org.themoviedb.www"
         let dbIdentifier = identifier + ".tmdb"
         let dbFolder = last.appendingPathComponent(dbIdentifier)
         do {

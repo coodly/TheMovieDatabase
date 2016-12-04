@@ -35,13 +35,12 @@ public class TMDB: InjectionHandler {
     public func detailsFor(movieId: Int, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
         Logging.log("Fetch details for movieId:\(movieId)")
         let request = FetchDetailsRequest(movieId: movieId, includedDetails: details)
-        inject(into: request)
         request.resulthandler = {
             result, error in
             
             completion(result as? Movie, error)
         }
-        request.execute()
+        runWithConfigCheck(request: request)
     }
     
     fileprivate func runWithConfigCheck(request: NetworkRequest) {
