@@ -18,10 +18,13 @@ import Foundation
 
 private let ListMoviesPath = "/movie/top_rated"
 
-internal class ListTopMoviesRequest: NetworkRequest, ConfigurationConsumer {
+internal class ListTopMoviesRequest: NetworkRequest, ConfigurationConsumer, CachedRequest {
     private var page: Int
     var configuration: Configuration!
-    
+    var cacheKey: String {
+        return "top-rated-\(page)"
+    }
+
     init(page: Int) {
         self.page = page
     }

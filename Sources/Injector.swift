@@ -31,6 +31,9 @@ internal class Injector {
     var apiKey: String!
     var networkFetch: NetworkFetch!
     var configuration: Configuration? = Configuration.load()
+    private lazy var cache: ListCache = {
+        return ListCache()
+    }()
     
     func inject(into: AnyObject) {
         if var consumer = into as? APIKeyConsumer {
@@ -43,6 +46,10 @@ internal class Injector {
         
         if var consumer = into as? ConfigurationConsumer {
             consumer.configuration = configuration!
+        }
+
+        if var consumer = into as? ListCacheConsumer {
+            consumer.cache = cache
         }
     }
 }

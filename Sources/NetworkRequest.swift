@@ -23,11 +23,12 @@ private enum Method: String {
     case GET
 }
 
-internal class NetworkRequest: NetworkFetchConsumer, APIKeyConsumer {
+internal class NetworkRequest: NetworkFetchConsumer, APIKeyConsumer, ListCacheConsumer {
     var fetch: NetworkFetch!
     var apiKey: String!
+    var cache: ListCache!
     var resulthandler: ((Any?, Error?) -> ())!
-    
+
     func execute() {
         fatalError("Override \(#function)")
     }
@@ -41,6 +42,19 @@ internal class NetworkRequest: NetworkFetchConsumer, APIKeyConsumer {
     }
     
     private func executeMethod(_ method: Method, path: String, parameters: [String: AnyObject]?) {
+        if let cachedRequest = self as? CachedRequest, let data = cache.data(for: cachedRequest.cacheKey) {
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject] {
+                    handle(success: json)
+                    return
+                } else {
+                    Logging.log("Unexpected JSON content")
+                }
+            } catch {
+                Logging.log("Cached data error: \(error)")
+            }
+        }
+
         var components = URLComponents(url: URL(string: APIServer)!, resolvingAgainstBaseURL: true)!
         components.path = components.path + path
         
@@ -76,9 +90,12 @@ internal class NetworkRequest: NetworkFetchConsumer, APIKeyConsumer {
                 Logging.log("Fetch error \(error)")
                 self.handle(error: error)
             }
-            
+
+            if let cached = self as? CachedRequest, let data = data {
+                self.cache.cache(data, for: cached.cacheKey)
+            }
+
             if let data = data {
-                
                 Logging.log("Response \(String(data: data, encoding: String.Encoding.utf8))")
                 do {
                     let json = try JSONSerialization.jsonObject(with: data, options: [])
