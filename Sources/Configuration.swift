@@ -28,12 +28,12 @@ struct Configuration {
             "poster": ["base": posterConfig.baseURL, "sizes": posterConfig.sizes] as AnyObject
         ]
         let data = try! JSONSerialization.data(withJSONObject: dict)
-        try! data.write(to: Configuration.condigFilePath)
-        Logging.log("Confit saved to \(Configuration.condigFilePath)")
+        try! data.write(to: Configuration.configFilePath)
+        Logging.log("Config saved to \(Configuration.configFilePath)")
     }
     
     static func load() -> Configuration? {
-        let path = condigFilePath
+        let path = configFilePath
         guard FileManager.default.fileExists(atPath: path.path) else {
             Logging.log("No config file")
             return nil
@@ -68,7 +68,7 @@ struct Configuration {
         }
     }
     
-    private static var condigFilePath: URL = {
+    private static var configFilePath: URL = {
         return workingFilesDirectory.appendingPathComponent("Configuration.json")
     }()
     

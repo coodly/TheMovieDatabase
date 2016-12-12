@@ -59,6 +59,11 @@ public class TMDB: InjectionHandler {
         configRequest.resulthandler = {
             result, error in
 
+            if let error = error {
+                request.handle(error: error)
+                return
+            }
+            
             if let config = result as? Configuration {
                 Injector.sharedInsatnce.configuration = config
                 config.write()
