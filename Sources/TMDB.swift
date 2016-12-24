@@ -16,6 +16,8 @@
 
 import Foundation
 
+public typealias TMDBCompletionClosure = ((Cursor<Movie>?, Error?) -> ())
+
 public class TMDB: InjectionHandler {
     public init(apiKey: String, networkFetch: NetworkFetch) {
         Injector.sharedInsatnce.apiKey = apiKey
@@ -72,6 +74,32 @@ public class TMDB: InjectionHandler {
             injectAndRunClosure()
         }
         configRequest.execute()
+    }
+}
+
+// MARK: -
+// MARK: Lists
+public extension TMDB {
+    public func fetch(page: Int, in list: List, completion: @escaping TMDBCompletionClosure) {
+        let request: NetworkRequest
+        switch list {
+        case .topRated:
+            request = ListTopMoviesRequest(page: page)
+        case .popular:
+            request = ListPopularMoviesRequest(page: page)
+        case .genre(let genreId):
+            request = MoviesDiscoverRequest(genreId: genreId, page: page)
+        default:
+            fatalError("Unknown list type: \(list)")
+        }
+        
+        request.resulthandler = {
+            result, error in
+            
+            completion(result as? Cursor<Movie>, error)
+        }
+        
+        runWithConfigCheck(request: request)
     }
 }
 
