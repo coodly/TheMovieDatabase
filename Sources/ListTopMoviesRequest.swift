@@ -40,7 +40,7 @@ internal class ListTopMoviesRequest: NetworkRequest, ConfigurationConsumer, Cach
             return Movie.loadFromData(index, data:data, config: self.configuration, apiKey: self.apiKey)
         }
         
-        let cursor = Cursor<Movie>.loadFromData(response, creation: createMovieClosure)
+        let cursor = Cursor<Movie>.loadFrom(response, creation: createMovieClosure)
         resulthandler(cursor, nil)
     }
 }
