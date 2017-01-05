@@ -24,27 +24,6 @@ public class TMDB: InjectionHandler {
         Injector.sharedInsatnce.networkFetch = networkFetch
     }
     
-    public func fetchNextPage(_ cursor: Cursor<Movie>, completion: @escaping ((Cursor<Movie>) -> ())) {
-        Logging.log("Fetch next page")
-        fetchTopMovies(on: cursor.nextPage(), completion: completion)
-    }
-    
-    public func detailsFor(movie: Movie, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
-        Logging.log("Fetch details for movie:\(movie)")
-        detailsFor(movieId: movie.id, inclidedDetails: details, completion: completion)
-    }
-
-    public func detailsFor(movieId: Int, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
-        Logging.log("Fetch details for movieId:\(movieId)")
-        let request = FetchDetailsRequest(movieId: movieId, includedDetails: details)
-        request.resulthandler = {
-            result, error in
-            
-            completion(result as? Movie, error)
-        }
-        runWithConfigCheck(request: request)
-    }
-    
     fileprivate func runWithConfigCheck(request: NetworkRequest) {
         let injectAndRunClosure = {
             self.inject(into: request)
@@ -77,6 +56,26 @@ public class TMDB: InjectionHandler {
     }
 }
 
+// MARK: - 
+// MARK: Movie details
+public extension TMDB {
+    public func detailsFor(movie: Movie, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
+        Logging.log("Fetch details for movie:\(movie)")
+        detailsFor(movieId: movie.id, inclidedDetails: details, completion: completion)
+    }
+    
+    public func detailsFor(movieId: Int, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
+        Logging.log("Fetch details for movieId:\(movieId)")
+        let request = FetchDetailsRequest(movieId: movieId, includedDetails: details)
+        request.resulthandler = {
+            result, error in
+            
+            completion(result as? Movie, error)
+        }
+        runWithConfigCheck(request: request)
+    }
+}
+
 // MARK: -
 // MARK: Lists
 public extension TMDB {
@@ -103,42 +102,8 @@ public extension TMDB {
     }
 }
 
-// MAKR: -
-// MARK: Top movies list
-public extension TMDB {
-    public func fetchTopMovies(on page: Int = 1, completion: @escaping ((Cursor<Movie>) -> ())) {
-        Logging.log("Fetch top movies on page: \(page)")
-        let listRequest = ListTopMoviesRequest(page: page)
-        listRequest.resulthandler = {
-            result, error in
-            
-            if let cursor = result as? Cursor<Movie> {
-                completion(cursor)
-            }
-        }
-        runWithConfigCheck(request: listRequest)
-    }
-}
-
 // MARK: -
-// MARK: Popular
-public extension TMDB {
-    public func popular(on page: Int = 1, completion: @escaping ((Cursor<Movie>) -> ())) {
-        Logging.log("Fetch popular on page \(page)")
-        let listRequest = ListPopularMoviesRequest(page: page)
-        listRequest.resulthandler = {
-            result, error in
-            
-            if let cursor = result as? Cursor<Movie> {
-                completion(cursor)
-            }
-        }
-        runWithConfigCheck(request: listRequest)
-    }
-}
-
-// MARK: -
-// MARK: Movie genres
+// MARK: Movie genres list
 public extension TMDB {
     public func listMovieGenres(completion: @escaping ([Genre]) -> ()) {
         let request = ListMovieGenresRequest()
@@ -148,23 +113,6 @@ public extension TMDB {
             
             let genres = result as? [Genre]
             completion(genres ?? [])
-        }
-        request.execute()
-    }
-    
-    public func movies(for genre: Genre, completion: @escaping ((Cursor<Movie>) -> ())) {
-        movies(for: genre.id, completion: completion)
-    }
-
-    public func movies(for genreId: Int, on page: Int = 1, completion: @escaping ((Cursor<Movie>) -> ())) {
-        let request = MoviesDiscoverRequest(genreId: genreId, page: page)
-        inject(into: request)
-        request.resulthandler = {
-            cursor, error in
-            
-            if let cursor = cursor as? Cursor<Movie> {
-                completion(cursor)
-            }
         }
         request.execute()
     }
