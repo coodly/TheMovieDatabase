@@ -88,6 +88,12 @@ public extension TMDB {
             request = ListPopularMoviesRequest(page: page)
         case .genre(let genreId):
             request = MoviesDiscoverRequest(genreId: genreId, page: page)
+        case .search(let term):
+            guard !term.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty else {
+                completion(nil, nil)
+                return
+            }
+            request = SearchMoviesRequest(page: page, term: term)
         default:
             fatalError("Unknown list type: \(list)")
         }
@@ -115,5 +121,13 @@ public extension TMDB {
             completion(genres ?? [])
         }
         request.execute()
+    }
+}
+
+// MARK: -
+// MARK: Movies search
+public extension TMDB {
+    public func search(movie term: String, completion: @escaping TMDBCompletionClosure) {
+        
     }
 }

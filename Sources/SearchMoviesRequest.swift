@@ -1,0 +1,53 @@
+/*
+ * Copyright 2017 Coodly LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import Foundation
+
+private let SearchPath = "/search/movie"
+
+internal class SearchMoviesRequest: NetworkRequest, ConfigurationConsumer {
+    var configuration: Configuration!
+    
+    private let page: Int
+    private let term: String
+    init(page: Int, term: String) {
+        self.page = page
+        self.term = term
+    }
+    
+    override func execute() {
+        GET(SearchPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject, "query": term.encode() as AnyObject])
+    }
+    
+    override func handle(success response: [String : AnyObject]) {
+        let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
+            index, data in
+            
+            return Movie.loadFromData(index, data:data, config: self.configuration, apiKey: self.apiKey)
+        }
+        
+        let cursor = Cursor<Movie>.loadFrom(response, creation: createMovieClosure)
+        resulthandler(cursor, nil)
+    }
+}
+
+private extension String {
+    func encode() -> String {
+        var encoded = trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let allowed = CharacterSet.urlQueryAllowed
+        return encoded.addingPercentEncoding(withAllowedCharacters: allowed)!
+    }
+}

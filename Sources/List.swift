@@ -20,4 +20,5 @@ public enum List {
     case popular
     case topRated
     case genre(Int)
+    case search(String)
 }
