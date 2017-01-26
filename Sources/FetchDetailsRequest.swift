@@ -30,14 +30,14 @@ public struct Details: OptionSet {
         self.key = ""
     }
     
-    public static let Credits = Details(rawValue: 1 << 0, key: "credits")
-    public static let Similar = Details(rawValue: 1 << 1, key: "similar")
-    public static let Reviews = Details(rawValue: 1 << 2, key: "reviews")
-    public static let Translations = Details(rawValue: 1 << 3, key: "translations")
-    public static let Videos = Details(rawValue: 1 << 4, key: "videos")
-    public static let Images = Details(rawValue: 1 << 5, key: "images")
+    public static let credits = Details(rawValue: 1 << 0, key: "credits")
+    public static let similar = Details(rawValue: 1 << 1, key: "similar")
+    public static let reviews = Details(rawValue: 1 << 2, key: "reviews")
+    public static let translations = Details(rawValue: 1 << 3, key: "translations")
+    public static let videos = Details(rawValue: 1 << 4, key: "videos")
+    public static let images = Details(rawValue: 1 << 5, key: "images")
     
-    static let allValues: [Details] = [.Credits, .Similar, .Reviews, .Translations, .Videos, .Images]
+    static let allValues: [Details] = [.credits, .similar, .reviews, .translations, .videos, .images]
 }
 
 private let MovieDetailsPath = "/movie"
