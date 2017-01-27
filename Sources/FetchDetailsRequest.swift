@@ -77,6 +77,16 @@ class FetchDetailsRequest: NetworkRequest, ConfigurationConsumer {
         if let production = data["production_companies"] as? [[String: AnyObject]] {
             result.productionCompanies = ProductionCompany.loadFromData(production)
         }
+        if let similar = data["similar"] as? [String: AnyObject], let results = similar["results"] as? [[String: AnyObject]] {
+            var loaded = [Movie]()
+            for result in results {
+                if let movie = Movie.loadFromData(0, data: result, config: self.configuration, apiKey: self.apiKey) {
+                    loaded.append(movie)
+                }
+            }
+
+            result.similar = loaded
+        }
         
         resulthandler(result, nil)
     }
