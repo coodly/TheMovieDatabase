@@ -71,7 +71,8 @@ class FetchDetailsRequest: NetworkRequest, ConfigurationConsumer {
         }
         
         if let credits = data["credits"] as? [String: AnyObject] {
-            result.directors = Director.loadFromCredits(credits)
+            result.directors = Director.loadFrom(credits)
+            result.cast = Actor.loadFrom(credits)
         }
         if let production = data["production_companies"] as? [[String: AnyObject]] {
             result.productionCompanies = ProductionCompany.loadFromData(production)

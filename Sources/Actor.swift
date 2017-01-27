@@ -16,33 +16,29 @@
 
 import Foundation
 
-public struct Director {
+public struct Actor {
     public let id: Int
     public let name: String
     
-    static func loadFrom(_ data: [String: AnyObject]) -> [Director] {
-        guard let crew = data["crew"] as? [[String: AnyObject]] else {
+    static func loadFrom(_ data: [String: AnyObject]) -> [Actor] {
+        guard let cast = data["cast"] as? [[String: AnyObject]] else {
             return []
         }
         
         
-        var result = [Director]()
-        for member in crew {
-            guard let job = member["job"] as? String, job == "Director" else {
+        var result = [Actor]()
+        for actor in cast {
+            guard let actor = loadFromData(actor) else {
                 continue
             }
             
-            guard let director = loadFromData(member) else {
-                continue
-            }
-            
-            result.append(director)
+            result.append(actor)
         }
         
         return result
     }
     
-    static func loadFromData(_ data: [String: AnyObject]) -> Director? {
+    static func loadFromData(_ data: [String: AnyObject]) -> Actor? {
         guard let name = data["name"] as? String else {
             return nil
         }
@@ -51,6 +47,6 @@ public struct Director {
             return nil
         }
         
-        return Director(id: id, name: name)
+        return Actor(id: id, name: name)
     }
 }
