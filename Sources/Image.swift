@@ -19,10 +19,9 @@ import Foundation
 public struct Image {
     let path: String?
     let config: ImageConfiguration?
-    let apiKey: String?
     
     public func url(for size: String = "original") -> URL? {
-        guard let path = path, let config = config, let apiKey = apiKey else {
+        guard let path = path, let config = config else {
             return nil
         }
         
@@ -34,7 +33,7 @@ public struct Image {
             usedSize = "original"
         }
         
-        let result = "\(config.baseURL)\(usedSize)\(path)?api_key=\(apiKey)"
+        let result = "\(config.baseURL)\(usedSize)\(path)"
         return URL(string: result)
     }
     

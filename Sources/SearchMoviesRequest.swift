@@ -36,7 +36,7 @@ internal class SearchMoviesRequest: NetworkRequest, ConfigurationConsumer {
         let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
             index, data in
             
-            return Movie.loadFromData(index, data:data, config: self.configuration, apiKey: self.apiKey)
+            return Movie.loadFromData(index, data:data, config: self.configuration)
         }
         
         let cursor = Cursor<Movie>.loadFrom(response, creation: createMovieClosure)

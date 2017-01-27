@@ -19,8 +19,9 @@ import Foundation
 public struct Actor {
     public let id: Int
     public let name: String
+    public let profile: Image?
     
-    static func loadFrom(_ data: [String: AnyObject]) -> [Actor] {
+    static func loadFrom(_ data: [String: AnyObject], profileConfiguration: ImageConfiguration) -> [Actor] {
         guard let cast = data["cast"] as? [[String: AnyObject]] else {
             return []
         }
@@ -28,7 +29,7 @@ public struct Actor {
         
         var result = [Actor]()
         for actor in cast {
-            guard let actor = loadFromData(actor) else {
+            guard let actor = loadFromData(actor, with: profileConfiguration) else {
                 continue
             }
             
@@ -38,7 +39,7 @@ public struct Actor {
         return result
     }
     
-    static func loadFromData(_ data: [String: AnyObject]) -> Actor? {
+    static func loadFromData(_ data: [String: AnyObject], with config: ImageConfiguration) -> Actor? {
         guard let name = data["name"] as? String else {
             return nil
         }
@@ -47,6 +48,11 @@ public struct Actor {
             return nil
         }
         
-        return Actor(id: id, name: name)
+        var profile: Image? = nil
+        if let path = data["profile_path"] as? String {
+            profile = Image(path: path, config: config)
+        }
+        
+        return Actor(id: id, name: name, profile: profile)
     }
 }

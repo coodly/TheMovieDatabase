@@ -65,14 +65,14 @@ class FetchDetailsRequest: NetworkRequest, ConfigurationConsumer {
     }
     
     override func handle(success data: [String : AnyObject]) {
-        guard var result = Movie.loadFromData(0, data: data, config: self.configuration, apiKey: self.apiKey) else {
+        guard var result = Movie.loadFromData(0, data: data, config: self.configuration) else {
             resulthandler(nil, nil)
             return
         }
         
         if let credits = data["credits"] as? [String: AnyObject] {
             result.directors = Director.loadFrom(credits)
-            result.cast = Actor.loadFrom(credits)
+            result.cast = Actor.loadFrom(credits, profileConfiguration: self.configuration.profileConfig)
         }
         if let production = data["production_companies"] as? [[String: AnyObject]] {
             result.productionCompanies = ProductionCompany.loadFromData(production)
@@ -80,7 +80,7 @@ class FetchDetailsRequest: NetworkRequest, ConfigurationConsumer {
         if let similar = data["similar"] as? [String: AnyObject], let results = similar["results"] as? [[String: AnyObject]] {
             var loaded = [Movie]()
             for result in results {
-                if let movie = Movie.loadFromData(0, data: result, config: self.configuration, apiKey: self.apiKey) {
+                if let movie = Movie.loadFromData(0, data: result, config: self.configuration) {
                     loaded.append(movie)
                 }
             }

@@ -37,7 +37,7 @@ public struct Movie {
     public var cast: [Actor]?
     public var similar: [Movie]?
     
-    static func loadFromData(_ index: Int, data: [String: AnyObject], config: Configuration? = nil, apiKey: String? = nil) -> Movie? {
+    static func loadFromData(_ index: Int, data: [String: AnyObject], config: Configuration? = nil) -> Movie? {
         guard let id = data["id"] as? Int else {
             Logging.log("id not found")
             return nil
@@ -63,9 +63,9 @@ public struct Movie {
         let originalTitle = data["original_title"] as? String
         let posterPath = data["poster_path"] as? String
         let overview = data["overview"] as? String
-        let poster = Image(path: posterPath, config: config?.posterConfig, apiKey: apiKey)
+        let poster = Image(path: posterPath, config: config?.posterConfig)
         let backdropPath = data["backdrop_path"] as? String
-        let backdrop = Image(path: backdropPath, config: config?.backdropConfig, apiKey: apiKey)
+        let backdrop = Image(path: backdropPath, config: config?.backdropConfig)
         
         return Movie(index: index, id: id, title: title, originalTitle: originalTitle, overview: overview, poster: poster, backdrop: backdrop, rating: rating, releaseDate: releaseDate, directors: nil, productionCompanies: nil, cast: nil, similar: nil)
     }
