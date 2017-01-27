@@ -48,9 +48,15 @@ class ConfigurationsRequest: NetworkRequest {
             Logging.log("No poster sizes")
             return
         }
-    
+
+        guard let profileSizes = images["profile_sizes"] as? [String] else {
+            Logging.log("No poster sizes")
+            return
+        }
+
         let backConfig = ImageConfiguration(baseURL: base, sizes: backdropSizes)
         let posterConfig = ImageConfiguration(baseURL: base, sizes: posterSizes)
-        result = Configuration(backdropConfig: backConfig, posterConfig: posterConfig, time: Date())
+        let profileConfig = ImageConfiguration(baseURL: base, sizes: profileSizes)
+        result = Configuration(backdropConfig: backConfig, posterConfig: posterConfig, profileConfig: profileConfig, time: Date())
     }
 }

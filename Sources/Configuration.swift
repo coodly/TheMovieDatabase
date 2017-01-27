@@ -19,13 +19,15 @@ import Foundation
 struct Configuration {
     let backdropConfig: ImageConfiguration
     let posterConfig: ImageConfiguration
+    let profileConfig: ImageConfiguration
     let time: Date?
     
     func write() {
         let dict: [String: AnyObject] = [
             "time": time!.timeIntervalSince1970 as AnyObject,
             "backdrop": ["base": backdropConfig.baseURL, "sizes": backdropConfig.sizes] as AnyObject,
-            "poster": ["base": posterConfig.baseURL, "sizes": posterConfig.sizes] as AnyObject
+            "poster": ["base": posterConfig.baseURL, "sizes": posterConfig.sizes] as AnyObject,
+            "profile": ["base": profileConfig.baseURL, "sizes": profileConfig.sizes] as AnyObject
         ]
         let data = try! JSONSerialization.data(withJSONObject: dict)
         try! data.write(to: Configuration.configFilePath)
@@ -57,9 +59,14 @@ struct Configuration {
                 return nil
             }
 
+            guard let profile = content["profile"] as? [String: AnyObject], let profileBase = poster["base"] as? String, let profileSizes = poster["sizes"] as? [String] else {
+                return nil
+            }
+
             let backdrop = ImageConfiguration(baseURL: backBase, sizes: backSizes)
             let posterConfig = ImageConfiguration(baseURL: posterBase, sizes: posterSizes)
-            let result = Configuration(backdropConfig: backdrop, posterConfig: posterConfig, time: Date(timeIntervalSince1970: time))
+            let profileConfig = ImageConfiguration(baseURL: profileBase, sizes: profileSizes)
+            let result = Configuration(backdropConfig: backdrop, posterConfig: posterConfig, profileConfig: profileConfig, time: Date(timeIntervalSince1970: time))
             Logging.log("Did load \(result)")
             return result
         } catch {
