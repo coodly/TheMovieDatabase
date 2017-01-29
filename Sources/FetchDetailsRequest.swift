@@ -77,6 +77,17 @@ class FetchDetailsRequest: NetworkRequest, ConfigurationConsumer {
         if let production = data["production_companies"] as? [[String: AnyObject]] {
             result.productionCompanies = ProductionCompany.loadFromData(production)
         }
+        if let images = data["images"] as? [String: Any], let posters = images["posters"] as? [[String: Any]] {
+            var loaded = [Image]()
+            for poster in posters {
+                guard let path = poster["file_path"] as? String else {
+                    continue
+                }
+                
+                loaded.append(Image(path: path, config: configuration.posterConfig))
+            }
+            result.posters = loaded
+        }
         if let similar = data["similar"] as? [String: AnyObject], let results = similar["results"] as? [[String: AnyObject]] {
             var loaded = [Movie]()
             for result in results {
