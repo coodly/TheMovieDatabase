@@ -21,16 +21,24 @@ private let MovieDiscoverPath = "/discover/movie"
 internal class MoviesDiscoverRequest: NetworkRequest, ConfigurationConsumer {
     var configuration: Configuration!
     
-    private let genreId: Int
     private let page: Int
+    private let discoverByKey: String
+    private let discoverByValue: Int
     
     init(genreId: Int, page: Int) {
-        self.genreId = genreId
+        self.discoverByKey = "with_genres"
+        self.discoverByValue = genreId
+        self.page = page
+    }
+    
+    init(actorId: Int, page: Int) {
+        self.discoverByKey = "with_cast"
+        self.discoverByValue = actorId
         self.page = page
     }
     
     override func execute() {
-        GET(MovieDiscoverPath, parameters: ["api_key": apiKey as AnyObject, "sort_by": "popularity.desc" as AnyObject, "include_adult": false as AnyObject, "include_video": true as AnyObject, "page": page as AnyObject, "with_genres": genreId as AnyObject])
+        GET(MovieDiscoverPath, parameters: ["api_key": apiKey as AnyObject, "sort_by": "popularity.desc" as AnyObject, "include_adult": false as AnyObject, "include_video": true as AnyObject, "page": page as AnyObject, discoverByKey: discoverByValue as AnyObject])
     }
     
     override func handle(success response: [String : AnyObject]) {

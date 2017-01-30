@@ -21,4 +21,5 @@ public enum List {
     case topRated
     case genre(Int)
     case search(String)
+    case actor(Int)
 }
