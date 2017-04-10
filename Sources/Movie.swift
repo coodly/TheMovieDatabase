@@ -37,6 +37,7 @@ public struct Movie {
     public var cast: [Actor]?
     public var similar: [Movie]?
     public var posters: [Image]?
+    public var collection: CollectionSummary?
     
     static func loadFromData(_ index: Int, data: [String: AnyObject], config: Configuration? = nil) -> Movie? {
         guard let id = data["id"] as? Int else {
@@ -68,6 +69,13 @@ public struct Movie {
         let backdropPath = data["backdrop_path"] as? String
         let backdrop = Image(path: backdropPath, config: config?.backdropConfig)
         
-        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, overview: overview, poster: poster, backdrop: backdrop, rating: rating, releaseDate: releaseDate, directors: nil, productionCompanies: nil, cast: nil, similar: nil, posters: nil)
+        let collection: CollectionSummary?
+        if let summaryData = data["belongs_to_collection"] as? [String: AnyObject], let summary = CollectionSummary(data: summaryData, config: config) {
+            collection = summary
+        } else {
+            collection = nil
+        }
+        
+        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, overview: overview, poster: poster, backdrop: backdrop, rating: rating, releaseDate: releaseDate, directors: nil, productionCompanies: nil, cast: nil, similar: nil, posters: nil, collection: collection)
     }
 }
