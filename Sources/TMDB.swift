@@ -96,8 +96,6 @@ public extension TMDB {
             request = SearchMoviesRequest(page: page, term: term)
         case .actor(let actorId):
             request = MoviesDiscoverRequest(actorId: actorId, page: page)
-        default:
-            fatalError("Unknown list type: \(list)")
         }
         
         request.resulthandler = {
@@ -107,6 +105,16 @@ public extension TMDB {
         }
         
         runWithConfigCheck(request: request)
+    }
+}
+
+// MARK: -
+// MARK: Collections
+public extension TMDB {
+    public func fetch(colelction id: Int) {
+        let request = CollectionDetailsRequest(collectionId: id)
+        inject(into: request)
+        request.execute()
     }
 }
 

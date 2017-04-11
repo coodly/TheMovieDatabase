@@ -1,0 +1,53 @@
+{
+    "id": 230,
+    "name": "The Godfather Collection",
+    "overview": "Francis Ford Coppola’s trilogy films about the everyday life of a New York mafia family. With its star-studded cast these films would go down in history as some of the greatest Hollywood has ever produced.",
+    "poster_path": "/7SJVjEDoo7xH62TS8stkqRk4Byo.jpg",
+    "backdrop_path": "/3WZTxpgscsmoUk81TuECXdFOD0R.jpg",
+    "parts": [{
+              "adult": false,
+              "backdrop_path": "/6xKCYgH16UuwEGAyroLU6p8HLIn.jpg",
+              "genre_ids": [18, 80],
+              "id": 238,
+              "original_language": "en",
+              "original_title": "The Godfather",
+              "overview": "Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.",
+              "release_date": "1972-03-14",
+              "poster_path": "/d4KNaTrltq6bpkFS01pYtyXa09m.jpg",
+              "popularity": 6.586146,
+              "title": "The Godfather",
+              "video": false,
+              "vote_average": 8.3,
+              "vote_count": 4728
+    }, {
+              "adult": false,
+              "backdrop_path": "/gLbBRyS7MBrmVUNce91Hmx9vzqI.jpg",
+              "genre_ids": [18, 80],
+              "id": 240,
+              "original_language": "en",
+              "original_title": "The Godfather: Part II",
+              "overview": "In the continuing saga of the Corleone crime family, a young Vito Corleone grows up in Sicily and in 1910s New York. In the 1950s, Michael Corleone attempts to expand the family business into Las Vegas, Hollywood and Cuba.",
+              "release_date": "1974-12-20",
+              "poster_path": "/tHbMIIF51rguMNSastqoQwR0sBs.jpg",
+              "popularity": 4.985459,
+              "title": "The Godfather: Part II",
+              "video": false,
+              "vote_average": 8.2,
+              "vote_count": 2623
+    }, {
+              "adult": false,
+              "backdrop_path": "/mhdJ2rOK3JGnceqxNK9WufYmFr7.jpg",
+              "genre_ids": [18, 28, 53, 80],
+              "id": 242,
+              "original_language": "en",
+              "original_title": "The Godfather: Part III",
+              "overview": "In the midst of trying to legitimize his business dealings in 1979 New York and Italy, aging mafia don, Michael Corleone seeks forgiveness for his sins while taking a young protege under his wing.",
+              "release_date": "1990-12-24",
+              "poster_path": "/uzaP0L7BEprcJHCuwbaHiYT0UYX.jpg",
+              "popularity": 3.393202,
+              "title": "The Godfather: Part III",
+              "video": false,
+              "vote_average": 7.0,
+              "vote_count": 1161
+    }]
+}

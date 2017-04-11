@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Coodly LLC
+ * Copyright 2017 Coodly LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,16 @@
 
 import Foundation
 
-class SimpleFetch: NetworkFetch {
-    func fetchRequest(request: NSURLRequest, completion: NetworkFetchClosure) {
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-            (data, response, error) in
-            
-            var status = 0
-            if let httpResponse = response as? NSHTTPURLResponse {
-                status = httpResponse.statusCode
-            }
-            
-            completion(data, status, error)
-        }
-        task.resume()
+private let CollectionDetailsPath = "/collection"
+
+class CollectionDetailsRequest: NetworkRequest {
+    private let id: Int
+    init(collectionId: Int) {
+        id = collectionId
+    }
+    
+    override func execute() {
+        let path = "\(CollectionDetailsPath)/\(id)"
+        GET(path, parameters: ["api_key": apiKey as AnyObject])
     }
 }
