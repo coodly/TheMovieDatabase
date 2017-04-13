@@ -18,7 +18,9 @@ import Foundation
 
 private let CollectionDetailsPath = "/collection"
 
-class CollectionDetailsRequest: NetworkRequest {
+class CollectionDetailsRequest: NetworkRequest, ConfigurationConsumer {
+    var configuration: Configuration!
+    
     private let id: Int
     init(collectionId: Int) {
         id = collectionId
@@ -27,5 +29,10 @@ class CollectionDetailsRequest: NetworkRequest {
     override func execute() {
         let path = "\(CollectionDetailsPath)/\(id)"
         GET(path, parameters: ["api_key": apiKey as AnyObject])
+    }
+    
+    override func handle(success response: [String : AnyObject]) {
+        let collection = Collection(json: response, config: configuration)
+        resulthandler?(collection, nil)
     }
 }
