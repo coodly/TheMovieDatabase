@@ -23,6 +23,26 @@ public struct Collection {
     public let poster: Image
     public let backdrop: Image
     public let movies: [Movie]
+    
+    public var formattedPeriod: String? {
+        let gregorian = Calendar(identifier: .gregorian)
+        let years = movies.filter({ $0.releaseDate > Date.distantPast }).map({ gregorian.component(.year, from: $0.releaseDate)})
+        guard let min = years.min(), let max = years.max() else {
+            return nil
+        }
+        
+        return "(\(min)-\(max))"
+    }
+    
+    public var averageRating: Float? {
+        let ratings = movies.map({ $0.rating }).filter({ $0 > 0.1 })
+        let combinedRating = ratings.reduce(0, +)
+        guard ratings.count > 0 else {
+            return nil
+        }
+        
+        return combinedRating / Float(ratings.count)
+    }
 }
 
 internal extension Collection {
