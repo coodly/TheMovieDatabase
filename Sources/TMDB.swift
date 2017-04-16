@@ -112,7 +112,7 @@ public extension TMDB {
 // MARK: Collections
 public typealias TMDBCollectionClosure = ((Collection?) -> ())
 public extension TMDB {
-    public func fetch(colelction id: Int, completion: @escaping TMDBCollectionClosure) {
+    public func fetch(collection id: Int, completion: @escaping TMDBCollectionClosure) {
         let request = CollectionDetailsRequest(collectionId: id)
         request.resulthandler = {
             result, error in
