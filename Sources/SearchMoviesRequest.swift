@@ -46,7 +46,7 @@ internal class SearchMoviesRequest: NetworkRequest, ConfigurationConsumer {
 
 private extension String {
     func encode() -> String {
-        var encoded = trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let encoded = trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let allowed = CharacterSet.urlQueryAllowed
         return encoded.addingPercentEncoding(withAllowedCharacters: allowed)!
     }
