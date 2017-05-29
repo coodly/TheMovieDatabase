@@ -21,11 +21,15 @@ protocol JSONLoader {
 }
 
 extension JSONLoader {
-    func json<Result>(from file: String) -> Result {
+    func data(from file: String) -> Data {
         let path = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
             .appendingPathComponent("TestData", isDirectory: true)
             .appendingPathComponent("\(file).json")
-        let data =  try! Data(contentsOf: path)
+        return try! Data(contentsOf: path)
+    }
+    
+    func json<Result>(from file: String) -> Result {
+        let data =  self.data(from: file)
         return try! JSONSerialization.jsonObject(with: data, options: []) as! Result
     }
 }

@@ -59,7 +59,7 @@ struct Configuration {
                 return nil
             }
 
-            guard let profile = content["profile"] as? [String: AnyObject], let profileBase = poster["base"] as? String, let profileSizes = poster["sizes"] as? [String] else {
+            guard let profile = content["profile"] as? [String: AnyObject], let profileBase = profile["base"] as? String, let profileSizes = poster["sizes"] as? [String] else {
                 return nil
             }
 

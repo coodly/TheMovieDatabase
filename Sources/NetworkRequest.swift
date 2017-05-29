@@ -18,6 +18,11 @@ import Foundation
 
 private let APIServer = "https://api.themoviedb.org/3"
 
+public struct TMDBError: Error {
+    let code: Int
+    let message: String
+}
+
 private enum Method: String {
     case POST
     case GET
@@ -83,29 +88,36 @@ internal class NetworkRequest: NetworkFetchConsumer, APIKeyConsumer, ListCacheCo
         let request = NSMutableURLRequest(url: requestURL)
         request.httpMethod = method.rawValue
         
-        fetch.fetch(request: request as URLRequest) {
-            data, response, error in
+        fetch.fetch(request: request as URLRequest, completion: handleRaw)
+    }
+    
+    func handleRaw(data: Data?, response: URLResponse?, error: Error?) {
+        if let error = error {
+            Logging.log("Fetch error \(error)")
+            self.handle(error: error)
+        }
+        
+        if let cached = self as? CachedRequest, let data = data {
+            self.cache.cache(data, for: cached.cacheKey)
+        }
+        
+        guard let data = data else {
+            handle(error: error)
+            return
+        }
+        
+        Logging.log("Response \(String(data: data, encoding: .utf8).debugDescription)")
+        do {
+            let json = try JSONSerialization.jsonObject(with: data, options: [])
+            let body = json as! [String: AnyObject]
             
-            if let error = error {
-                Logging.log("Fetch error \(error)")
-                self.handle(error: error)
-            }
-
-            if let cached = self as? CachedRequest, let data = data {
-                self.cache.cache(data, for: cached.cacheKey)
-            }
-
-            if let data = data {
-                Logging.log("Response \(String(data: data, encoding: String.Encoding.utf8))")
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: [])
-                    self.handle(success: json as! [String: AnyObject])
-                } catch let error as NSError {
-                    self.handle(error: error)
-                }
+            if let code = body["status_code"] as? Int, let message = body["status_message"] as? String {
+                handle(error: TMDBError(code: code, message: message))
             } else {
-                self.handle(error: error)
+                handle(success: body)
             }
+        } catch let error as NSError {
+            handle(error: error)
         }
     }
     
@@ -114,7 +126,7 @@ internal class NetworkRequest: NetworkFetchConsumer, APIKeyConsumer, ListCacheCo
     }
     
     func handle(error: Error?) {
-        Logging.log("handleErrorResponse: \(error)")
+        Logging.log("handleErrorResponse: \(error.debugDescription)")
         resulthandler(nil, error)
     }
 }
