@@ -18,9 +18,13 @@ import Foundation
 
 private let APIServer = "https://api.themoviedb.org/3"
 
-public struct TMDBError: Error {
-    let code: Int
-    let message: String
+public struct TMDBError: Error, LocalizedError {
+    public let code: Int
+    public let message: String
+
+    public var errorDescription: String? {
+        return message
+    }
 }
 
 private enum Method: String {
