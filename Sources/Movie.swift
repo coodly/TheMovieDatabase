@@ -50,10 +50,12 @@ public struct Movie {
             return nil
         }
         
-        guard let rating = data["vote_average"] as? Float else {
+        //TODO jaanus: check, report, or something
+        guard let voteAverage = data["vote_average"] as? NSNumber else {
             Logging.log("Rating not found")
             return nil
         }
+        let rating = voteAverage.floatValue
         
         let releaseDate: Date
         if let dateString = data["release_date"] as? String, let date = Movie.dateFormatter.date(from: dateString) {
