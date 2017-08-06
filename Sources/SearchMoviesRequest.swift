@@ -29,7 +29,7 @@ internal class SearchMoviesRequest: NetworkRequest, ConfigurationConsumer {
     }
     
     override func execute() {
-        GET(SearchPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject, "query": term.encode() as AnyObject])
+        GET(SearchPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject, "query": term as AnyObject])
     }
     
     override func handle(success response: [String : AnyObject]) {
@@ -41,13 +41,5 @@ internal class SearchMoviesRequest: NetworkRequest, ConfigurationConsumer {
         
         let cursor = Cursor<Movie>.loadFrom(response, creation: createMovieClosure)
         resulthandler(cursor, nil)
-    }
-}
-
-private extension String {
-    func encode() -> String {
-        let encoded = trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        let allowed = CharacterSet.urlQueryAllowed
-        return encoded.addingPercentEncoding(withAllowedCharacters: allowed)!
     }
 }
