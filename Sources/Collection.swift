@@ -64,8 +64,8 @@ internal extension Collection {
         }
         
         var movies = [Movie]()
-        for part in parts {
-            if let movie = Movie.loadFromData(0, data: part, config: config) {
+        for (index, part) in parts.enumerated() {
+            if let movie = Movie.loadFromData(index, data: part, config: config) {
                 movies.append(movie)
             }
         }
