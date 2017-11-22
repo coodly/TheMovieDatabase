@@ -79,7 +79,7 @@ public extension TMDB {
 // MARK: -
 // MARK: Lists
 public extension TMDB {
-    public func fetch(page: Int, in list: List, completion: @escaping TMDBCompletionClosure) {
+    public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc), completion: @escaping TMDBCompletionClosure) {
         let request: NetworkRequest
         switch list {
         case .topRated:
@@ -87,7 +87,7 @@ public extension TMDB {
         case .popular:
             request = ListPopularMoviesRequest(page: page)
         case .genre(let genreId):
-            request = MoviesDiscoverRequest(genreId: genreId, page: page)
+            request = MoviesDiscoverRequest(genreId: genreId, page: page, sort: sort)
         case .search(let term):
             guard !term.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty else {
                 completion(nil, nil)
@@ -95,7 +95,7 @@ public extension TMDB {
             }
             request = SearchMoviesRequest(page: page, term: term)
         case .actor(let actorId):
-            request = MoviesDiscoverRequest(actorId: actorId, page: page)
+            request = MoviesDiscoverRequest(actorId: actorId, page: page, sort: sort)
         }
         
         request.resulthandler = {
