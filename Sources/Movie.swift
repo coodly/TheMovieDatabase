@@ -31,6 +31,7 @@ public struct Movie {
     public let poster: Image?
     public let backdrop: Image?
     public let rating: Float
+    public var popularity: Double
     public let releaseDate: Date
     public var directors: [Director]?
     public var productionCompanies: [ProductionCompany]?
@@ -38,7 +39,7 @@ public struct Movie {
     public var similar: [Movie]?
     public var posters: [Image]?
     public var collection: CollectionSummary?
-    
+
     static func loadFromData(_ index: Int, data: [String: AnyObject], config: Configuration? = nil) -> Movie? {
         guard let id = data["id"] as? Int else {
             Logging.log("id not found")
@@ -56,6 +57,7 @@ public struct Movie {
             return nil
         }
         let rating = voteAverage.floatValue
+        let popularity = data["popularity"] as? Double ?? 0.0
         
         let releaseDate: Date
         if let dateString = data["release_date"] as? String, let date = Movie.dateFormatter.date(from: dateString) {
@@ -78,6 +80,6 @@ public struct Movie {
             collection = nil
         }
         
-        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, overview: overview, poster: poster, backdrop: backdrop, rating: rating, releaseDate: releaseDate, directors: nil, productionCompanies: nil, cast: nil, similar: nil, posters: nil, collection: collection)
+        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, overview: overview, poster: poster, backdrop: backdrop, rating: rating, popularity: popularity, releaseDate: releaseDate, directors: nil, productionCompanies: nil, cast: nil, similar: nil, posters: nil, collection: collection)
     }
 }
