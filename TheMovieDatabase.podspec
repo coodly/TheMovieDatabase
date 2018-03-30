@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'TheMovieDatabase'
-  s.version = '0.8.0'
+  s.version = '0.8.1'
   s.license = 'Apache 2'
   s.summary = 'Swift interface for The Movie Database'
   s.homepage = 'https://github.com/coodly/TheMovieDatabase'
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
   s.ios.deployment_target = '10.0'
 
-  s.source_files = 'Sources/*.swift'
+  s.source_files = 'Sources/TheMovieDatabase/*.swift'
 
   s.requires_arc = true
 end
