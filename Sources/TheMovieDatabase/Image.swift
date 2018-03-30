@@ -17,7 +17,7 @@
 import Foundation
 
 public struct Image {
-    let path: String?
+    public let path: String?
     let config: ImageConfiguration?
     
     public func url(for size: String = "original") -> URL? {
