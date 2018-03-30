@@ -57,7 +57,7 @@ class FetchDetailsRequest: NetworkRequest, ConfigurationConsumer {
         let append = appendForDetails(include)
         
         var params: [String: AnyObject] = ["api_key": apiKey as AnyObject]
-        if append.characters.count > 0 {
+        if append.count > 0 {
             params["append_to_response"] = append as AnyObject?
         }
         
