@@ -138,3 +138,9 @@ public extension TMDB {
         request.execute()
     }
 }
+
+public extension TMDB {
+    public func poster(with path: String?) -> Image {
+        return Image(path: path, config: Injector.sharedInsatnce.configuration?.posterConfig)
+    }
+}
