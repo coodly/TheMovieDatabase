@@ -109,6 +109,20 @@ public extension TMDB {
 }
 
 // MARK: -
+// MARK: By external ID
+public extension TMDB {
+    public func findWithIMDB(id: String, completion: @escaping ((Movie?, Error?) -> Void)) {
+        let request = FindWithIMDBRequest(imdbID: id)
+        request.resulthandler = {
+            movie, error in
+            
+            completion(movie as? Movie, error)
+        }        
+        runWithConfigCheck(request: request)
+    }
+}
+
+// MARK: -
 // MARK: Collections
 public typealias TMDBCollectionClosure = ((Collection?) -> ())
 public extension TMDB {
