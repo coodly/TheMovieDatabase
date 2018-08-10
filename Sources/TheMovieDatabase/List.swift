@@ -22,4 +22,5 @@ public enum List {
     case genre(Int)
     case search(String)
     case actor(Int)
+    case user(Int)
 }
