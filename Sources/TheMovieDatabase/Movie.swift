@@ -39,6 +39,7 @@ public struct Movie {
     public var similar: [Movie]?
     public var posters: [Image]?
     public var collection: CollectionSummary?
+    public let genreIds: [Int]
 
     static func loadFromData(_ index: Int, data: [String: AnyObject], config: Configuration? = nil) -> Movie? {
         guard let id = data["id"] as? Int else {
@@ -80,6 +81,8 @@ public struct Movie {
             collection = nil
         }
         
-        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, overview: overview, poster: poster, backdrop: backdrop, rating: rating, popularity: popularity, releaseDate: releaseDate, directors: nil, productionCompanies: nil, cast: nil, similar: nil, posters: nil, collection: collection)
+        let genreIds = data["genre_ids"] as? [Int] ?? []
+        
+        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, overview: overview, poster: poster, backdrop: backdrop, rating: rating, popularity: popularity, releaseDate: releaseDate, directors: nil, productionCompanies: nil, cast: nil, similar: nil, posters: nil, collection: collection, genreIds: genreIds)
     }
 }
