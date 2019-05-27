@@ -58,7 +58,7 @@ public class TMDB: InjectionHandler {
 
 // MARK: - 
 // MARK: Movie details
-public extension TMDB {
+extension TMDB {
     public func detailsFor(movie: Movie, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
         Logging.log("Fetch details for movie:\(movie)")
         detailsFor(movieId: movie.id, inclidedDetails: details, completion: completion)
@@ -78,7 +78,7 @@ public extension TMDB {
 
 // MARK: -
 // MARK: Lists
-public extension TMDB {
+extension TMDB {
     public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc), completion: @escaping TMDBCompletionClosure) {
         let request: NetworkRequest
         switch list {
@@ -112,7 +112,7 @@ public extension TMDB {
 
 // MARK: -
 // MARK: By external ID
-public extension TMDB {
+extension TMDB {
     public func findWithIMDB(id: String, completion: @escaping ((Movie?, Error?) -> Void)) {
         let request = FindWithIMDBRequest(imdbID: id)
         request.resulthandler = {
@@ -127,7 +127,7 @@ public extension TMDB {
 // MARK: -
 // MARK: Collections
 public typealias TMDBCollectionClosure = ((Collection?) -> ())
-public extension TMDB {
+extension TMDB {
     public func fetch(collection id: Int, completion: @escaping TMDBCollectionClosure) {
         let request = CollectionDetailsRequest(collectionId: id)
         request.resulthandler = {
@@ -141,7 +141,7 @@ public extension TMDB {
 
 // MARK: -
 // MARK: Movie genres list
-public extension TMDB {
+extension TMDB {
     public func listMovieGenres(completion: @escaping ([Genre]) -> ()) {
         let request = ListMovieGenresRequest()
         inject(into: request)
@@ -155,7 +155,7 @@ public extension TMDB {
     }
 }
 
-public extension TMDB {
+extension TMDB {
     public func poster(with path: String?) -> Image {
         return Image(path: path, config: Injector.sharedInsatnce.configuration?.posterConfig)
     }
