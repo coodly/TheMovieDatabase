@@ -20,14 +20,3 @@ public struct Genre: Codable {
     public let id: Int
     public let name: String
 }
-
-extension Genre {
-    init?(data: [String:AnyObject]) {
-        guard let id = data["id"] as? Int, let name = data["name"] as? String else {
-            return nil
-        }
-        
-        self.id = id
-        self.name = name
-    }
-}

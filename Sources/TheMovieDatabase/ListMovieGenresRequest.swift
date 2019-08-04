@@ -18,27 +18,16 @@ import Foundation
 
 private let ListMovieGenresPath = "/genre/movie/list"
 
-internal class ListMovieGenresRequest: NetworkRequest<Genre, [Genre]> {
+internal struct GenresResponse: Codable {
+    let genres: [Genre]
+}
+
+internal class ListMovieGenresRequest: NetworkRequest<GenresResponse, [Genre]> {
     override func execute() {
         GET(ListMovieGenresPath, parameters: ["api_key": apiKey as AnyObject])
     }
     
-    override func handle(success response: [String : AnyObject]) {
-        guard let genres = response["genres"] as? [[String: AnyObject]] else {
-            resulthandler(nil, nil)
-            Logging.log("No genres element")
-            return
-        }
-        
-        var result = [Genre]()
-        for genre in genres {
-            guard let g = Genre(data: genre) else {
-                continue
-            }
-            
-            result.append(g)
-        }
-        
-        resulthandler(result, nil)
+    override func handle(response: GenresResponse) {
+        resulthandler(response.genres, nil)
     }
 }

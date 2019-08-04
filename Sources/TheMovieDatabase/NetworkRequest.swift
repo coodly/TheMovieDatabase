@@ -61,12 +61,8 @@ internal class NetworkRequest<Response: Codable, Result>:  NetworkFetchConsumer,
     private func executeMethod(_ method: Method, path: String, parameters: [String: AnyObject]?) {
         if let cachedRequest = self as? CachedRequest, let data = cache.data(for: cachedRequest.cacheKey) {
             do {
-                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: AnyObject] {
-                    handle(success: json)
-                    return
-                } else {
-                    Logging.log("Unexpected JSON content")
-                }
+                let response = try decoder.decode(Response.self, from: data)
+                handle(response: response)
             } catch {
                 Logging.log("Cached data error: \(error)")
             }
@@ -120,17 +116,24 @@ internal class NetworkRequest<Response: Codable, Result>:  NetworkFetchConsumer,
         
         Logging.log("Response \(String(data: data, encoding: .utf8).debugDescription)")
         do {
-            let json = try JSONSerialization.jsonObject(with: data, options: [])
-            let body = json as! [String: AnyObject]
+            let response = try decoder.decode(Response.self, from: data)
+            handle(response: response)
+
+            //let json = try JSONSerialization.jsonObject(with: data, options: [])
+            //let body = json as! [String: AnyObject]
             
-            if let code = body["status_code"] as? Int, let message = body["status_message"] as? String {
-                handle(error: TMDBError(code: code, message: message))
-            } else {
-                handle(success: body)
-            }
+            //if let code = body["status_code"] as? Int, let message = body["status_message"] as? String {
+            //    handle(error: TMDBError(code: code, message: message))
+            //} else {
+            //    handle(success: body)
+            //}
         } catch let error as NSError {
             handle(error: error)
         }
+    }
+    
+    func handle(response: Response) {
+        Logging.log("Handle response: \(response)")
     }
     
     func handle(success response: [String: AnyObject]) {
