@@ -18,7 +18,7 @@ import Foundation
 
 private let ListMovieGenresPath = "/genre/movie/list"
 
-internal class ListMovieGenresRequest: NetworkRequest {
+internal class ListMovieGenresRequest: NetworkRequest<Genre, [Genre]> {
     override func execute() {
         GET(ListMovieGenresPath, parameters: ["api_key": apiKey as AnyObject])
     }

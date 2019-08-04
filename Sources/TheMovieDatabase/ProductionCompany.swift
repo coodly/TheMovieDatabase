@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct ProductionCompany {
+public struct ProductionCompany: Codable {
     public let id: Int
     public let name: String
     

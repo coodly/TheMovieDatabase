@@ -18,7 +18,7 @@ import Foundation
 
 private let ListMoviesPath = "/movie/popular"
 
-internal class ListPopularMoviesRequest: NetworkRequest, ConfigurationConsumer, CachedRequest {
+internal class ListPopularMoviesRequest: NetworkRequest<Movie, Cursor<Movie>>, ConfigurationConsumer, CachedRequest {
     private var page: Int
     var configuration: Configuration!
     var cacheKey: String {

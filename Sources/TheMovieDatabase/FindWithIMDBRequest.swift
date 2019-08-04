@@ -18,7 +18,7 @@ import Foundation
 
 private let ByExternalIDPathBase = "/find/%@"
 
-internal class FindWithIMDBRequest: NetworkRequest, ConfigurationConsumer {
+internal class FindWithIMDBRequest: NetworkRequest<Movie, Movie>, ConfigurationConsumer {
     var configuration: Configuration!
     
     private let imdbID: String
@@ -32,7 +32,7 @@ internal class FindWithIMDBRequest: NetworkRequest, ConfigurationConsumer {
     }
     
     override func handle(success response: [String : AnyObject]) {
-        var movie: Any?
+        var movie: Movie?
         defer {
             resulthandler(movie, nil)
         }

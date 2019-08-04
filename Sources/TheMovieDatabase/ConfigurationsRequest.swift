@@ -18,7 +18,7 @@ import Foundation
 
 private let ConfigurationsPath = "/configuration"
 
-class ConfigurationsRequest: NetworkRequest {
+class ConfigurationsRequest: NetworkRequest<Configuration, Configuration> {
     override func execute() {
         GET(ConfigurationsPath, parameters: ["api_key": apiKey as AnyObject])
     }

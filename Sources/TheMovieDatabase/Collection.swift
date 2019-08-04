@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Collection {
+public struct Collection: Codable {
     public let id: Int
     public let name: String
     public let overview: String

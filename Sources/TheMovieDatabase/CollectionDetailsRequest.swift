@@ -18,7 +18,7 @@ import Foundation
 
 private let CollectionDetailsPath = "/collection"
 
-class CollectionDetailsRequest: NetworkRequest, ConfigurationConsumer {
+class CollectionDetailsRequest: NetworkRequest<Collection, Collection>, ConfigurationConsumer {
     var configuration: Configuration!
     
     private let id: Int

@@ -32,11 +32,19 @@ private enum Method: String {
     case GET
 }
 
-internal class NetworkRequest: NetworkFetchConsumer, APIKeyConsumer, ListCacheConsumer {
+internal class NetworkRequest<Response: Codable, Result>:  NetworkFetchConsumer, APIKeyConsumer, ListCacheConsumer {
     var fetch: NetworkFetch!
     var apiKey: String!
     var cache: ListCache!
-    var resulthandler: ((Any?, Error?) -> ())!
+    var resulthandler: ((Result?, Error?) -> Void)!
+    private lazy var decoder: JSONDecoder = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        return decoder
+    }()
 
     func execute() {
         fatalError("Override \(#function)")

@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Director {
+public struct Director: Codable {
     public let id: Int
     public let name: String
     

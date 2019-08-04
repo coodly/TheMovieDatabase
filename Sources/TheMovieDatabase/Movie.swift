@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Movie {
+public struct Movie: Codable {
     private static let dateFormatter: DateFormatter =  {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"

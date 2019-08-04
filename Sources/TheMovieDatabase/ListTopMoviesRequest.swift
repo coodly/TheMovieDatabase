@@ -18,7 +18,7 @@ import Foundation
 
 private let ListMoviesPath = "/movie/top_rated"
 
-internal class ListTopMoviesRequest: NetworkRequest, ConfigurationConsumer, CachedRequest {
+internal class ListTopMoviesRequest: NetworkRequest<Movie, Cursor<Movie>>, ConfigurationConsumer, CachedRequest {
     private var page: Int
     var configuration: Configuration!
     var cacheKey: String {

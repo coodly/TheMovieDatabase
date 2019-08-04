@@ -18,7 +18,7 @@ import Foundation
 
 private let ListPathBase = "/list/%@"
 
-internal class ListMoviesInUserList: NetworkRequest, ConfigurationConsumer {
+internal class ListMoviesInUserList: NetworkRequest<Movie, Cursor<Movie>>, ConfigurationConsumer {
     private var listId: Int
     var configuration: Configuration!
     

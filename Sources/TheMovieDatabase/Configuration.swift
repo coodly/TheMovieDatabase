@@ -16,7 +16,7 @@
 
 import Foundation
 
-struct Configuration {
+struct Configuration: Codable {
     let backdropConfig: ImageConfiguration
     let posterConfig: ImageConfiguration
     let profileConfig: ImageConfiguration

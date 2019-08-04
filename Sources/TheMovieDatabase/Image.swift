@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Image {
+public struct Image: Codable {
     public let path: String?
     let config: ImageConfiguration?
     

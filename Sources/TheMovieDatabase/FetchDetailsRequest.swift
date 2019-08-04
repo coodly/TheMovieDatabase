@@ -42,7 +42,7 @@ public struct Details: OptionSet {
 
 private let MovieDetailsPath = "/movie"
 
-class FetchDetailsRequest: NetworkRequest, ConfigurationConsumer {
+class FetchDetailsRequest: NetworkRequest<Movie, Movie>, ConfigurationConsumer {
     private let movieId: Int
     private let include: Details
     var configuration: Configuration!

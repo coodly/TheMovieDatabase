@@ -24,7 +24,7 @@ public class TMDB: InjectionHandler {
         Injector.sharedInsatnce.networkFetch = networkFetch
     }
     
-    fileprivate func runWithConfigCheck(request: NetworkRequest) {
+    fileprivate func runWithConfigCheck<Response: Codable, Result>(request: NetworkRequest<Response, Result>) {
         let injectAndRunClosure = {
             self.inject(into: request)
             request.execute()
@@ -80,7 +80,7 @@ extension TMDB {
 // MARK: Lists
 extension TMDB {
     public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc), completion: @escaping TMDBCompletionClosure) {
-        let request: NetworkRequest
+        let request: NetworkRequest<Movie, Cursor<Movie>>
         switch list {
         case .topRated:
             request = ListTopMoviesRequest(page: page)

@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Actor {
+public struct Actor: Codable {
     public let id: Int
     public let name: String
     public let profile: Image?
