@@ -45,9 +45,10 @@ public class TMDB: InjectionHandler {
                 return
             }
             
-            if let config = result as? Configuration {
+            if let config = result {
                 Injector.sharedInsatnce.configuration = config
-                config.write()
+                let cached = CachedConfiguration(configuration: config, time: Date())
+                cached.write()
             }
             
             injectAndRunClosure()

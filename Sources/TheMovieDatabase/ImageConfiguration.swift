@@ -17,6 +17,6 @@
 import Foundation
 
 struct ImageConfiguration: Codable {
-    let baseURL: String
+    let baseURL: URL
     let sizes: [String]
 }

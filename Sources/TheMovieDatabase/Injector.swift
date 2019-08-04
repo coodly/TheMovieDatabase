@@ -30,7 +30,7 @@ internal class Injector {
     static let sharedInsatnce = Injector()
     var apiKey: String!
     var networkFetch: NetworkFetch!
-    var configuration: Configuration? = Configuration.load()
+    var configuration: Configuration? = CachedConfiguration.load()?.configuration
     private lazy var cache: ListCache = {
         return ListCache()
     }()

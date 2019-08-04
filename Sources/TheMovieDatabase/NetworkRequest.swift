@@ -43,6 +43,7 @@ internal class NetworkRequest<Response: Codable, Result>:  NetworkFetchConsumer,
 
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .formatted(formatter)
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }()
 
