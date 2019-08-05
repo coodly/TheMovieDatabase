@@ -19,23 +19,36 @@ import Foundation
 public struct CollectionSummary: Codable {
     public let id: Int
     public let name: String
-    public let poster: Image?
-    public let backdrop: Image?
+    public var poster: Image? {
+        return Image(path: posterPath, config: config.posterConfig)
+    }
+    public var backdrop: Image? {
+        return Image(path: backdropPath, config: config.backdropConfig)
+    }
+
+    private let posterPath: String?
+    private let backdropPath: String?
+    
+    private let config: Configuration
+    
+    public init(from decoder: Decoder) throws {
+        guard let config = decoder.userInfo[.configuration] as? Configuration else {
+            fatalError("Missing configuration or invalid configuration")
+        }
+        
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        id = try values.decode(Int.self, forKey: .id)
+        name = try values.decode(String.self, forKey: .name)
+        posterPath = try? values.decode(String.self, forKey: .posterPath)
+        backdropPath = try? values.decode(String.self, forKey: .backdropPath)
+        
+        self.config = config
+    }
 }
 
 extension CollectionSummary {
     init?(data: [String: AnyObject], config: Configuration?) {
-        guard let id = data["id"] as? Int else {
-            return nil
-        }
-        
-        guard let name = data["name"] as? String else {
-            return nil
-        }
-        
-        self.id = id
-        self.name = name
-        poster = Image(path: data["poster_path"] as? String, config: config?.posterConfig)
-        backdrop = Image(path: data["backdrop_path"] as? String, config: config?.backdropConfig)
+        return nil
     }
 }

@@ -32,7 +32,9 @@ public struct Movie: Codable {
     public var similar: [Movie]?
     var posters: [Image]?
     private let config: Configuration
-    public var collection: CollectionSummary?
+    public var collection: CollectionSummary? {
+        return belongsToCollection
+    }
     public let genreIds: [Int]?
     public let tagline: String?
     
@@ -46,6 +48,7 @@ public struct Movie: Codable {
         return Image(path: backdropPath, config: config.backdropConfig)
     }
     private let credits: Credits?
+    private let belongsToCollection: CollectionSummary?
     
     public init(from decoder: Decoder) throws {
         guard let config = decoder.userInfo[.configuration] as? Configuration else {
@@ -67,9 +70,9 @@ public struct Movie: Codable {
         credits = try? values.decode(Credits.self, forKey: .credits)
         similar = (try? values.decode(MoviesPage.self, forKey: .similar))?.results
         posters = nil
-        collection = nil
         genreIds = try? values.decode([Int].self, forKey: .genreIds)
         tagline = try? values.decode(String.self, forKey: .tagline)
+        belongsToCollection = try? values.decode(CollectionSummary.self, forKey: .belongsToCollection)
     }
     
     static func loadFromData(_ index: Int, data: [String: AnyObject], config: Configuration? = nil) -> Movie? {
