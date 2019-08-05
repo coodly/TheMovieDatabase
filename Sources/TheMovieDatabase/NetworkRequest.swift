@@ -22,10 +22,16 @@ extension CodingUserInfoKey {
 
 private let APIServer = "https://api.themoviedb.org/3"
 
-public struct TMDBError: Error, LocalizedError {
-    public let code: Int
-    public let message: String
-
+public struct TMDBError: Codable, Error, LocalizedError {
+    public var code: Int {
+        return statusCode
+    }
+    public var message: String {
+        return statusMessage
+    }
+    public let statusCode: Int
+    public let statusMessage: String
+    
     public var errorDescription: String? {
         return message
     }
@@ -128,26 +134,18 @@ internal class NetworkRequest<Response: Codable, Result>:  NetworkFetchConsumer,
         do {
             let response = try decoder.decode(Response.self, from: data)
             handle(response: response)
-
-            //let json = try JSONSerialization.jsonObject(with: data, options: [])
-            //let body = json as! [String: AnyObject]
-            
-            //if let code = body["status_code"] as? Int, let message = body["status_message"] as? String {
-            //    handle(error: TMDBError(code: code, message: message))
-            //} else {
-            //    handle(success: body)
-            //}
         } catch let error as NSError {
-            handle(error: error)
+            if let serverMessage = try? decoder.decode(TMDBError.self, from: data) {
+                Logging.log("Error from server: \(serverMessage)")
+                handle(error: serverMessage)
+            } else {
+                handle(error: error)
+            }
         }
     }
     
     func handle(response: Response) {
         Logging.log("Handle response: \(response)")
-    }
-    
-    func handle(success response: [String: AnyObject]) {
-        Logging.log("handleSuccessResponse")
     }
     
     func handle(error: Error?) {
