@@ -18,36 +18,25 @@ import Foundation
 
 private let ListPathBase = "/list/%@"
 
-internal class ListMoviesInUserList: NetworkRequest<MoviesPage, Cursor<Movie>>, ConfigurationConsumer {
+internal struct MoviesListResult: Codable {
+    let items: [Movie]
+}
+
+internal class ListMoviesInUserList: NetworkRequest<MoviesListResult, Cursor<Movie>>, ConfigurationConsumer {
     private var listId: Int
     var configuration: Configuration!
     
     init(listId: Int) {
         self.listId = listId
     }
-    
+
     override func execute() {
         let path = String(format: ListPathBase, NSNumber(value: listId))
         GET(path, parameters: ["api_key": apiKey as AnyObject])
     }
-    
-    override func handle(success response: [String : AnyObject]) {
-        let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
-            index, data in
-            
-            return nil
-        }
-        
-        guard let items = response["items"] as? [[String: AnyObject]] else {
-            resulthandler(nil, nil) // TODO jaanus: error
-            return
-        }
-        
-        let cursor = Cursor<Movie>()
-        cursor.page = 0
-        cursor.totalPages = 0
-        cursor.items = items.compactMap({ createMovieClosure(0, $0) })
-        
+
+    override func handle(response: MoviesListResult) {
+        let cursor = Cursor(page: 1, totalPages: response.items.count, items: response.items)
         resulthandler(cursor, nil)
     }
 }

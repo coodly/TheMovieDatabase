@@ -94,7 +94,10 @@ extension TMDB {
         case .actor(let actorId):
             request = MoviesDiscoverRequest(actorId: actorId, page: page, sort: sort)
         case .user(let listId):
-            request = ListMoviesInUserList(listId: listId)
+            let request = ListMoviesInUserList(listId: listId)
+            request.resulthandler = completion
+            runWithConfigCheck(request: request)
+            return
         }
         
         request.resulthandler = completion

@@ -64,4 +64,12 @@ public class Cursor<T> {
         self.totalPages = totalPages
         self.items = items
     }
+    
+    convenience init(items: [T]) {
+        self.init()
+        
+        self.page = 1
+        self.totalPages = items.count
+        self.items = items
+    }
 }
