@@ -65,7 +65,7 @@ public struct Movie: Codable {
         releaseDate = (try? values.decode(Date.self, forKey: .releaseDate)) ?? Date.distantPast
         self.config = config
         credits = try? values.decode(Credits.self, forKey: .credits)
-        similar = nil
+        similar = (try? values.decode(MoviesPage.self, forKey: .similar))?.results
         posters = nil
         collection = nil
         genreIds = try? values.decode([Int].self, forKey: .genreIds)
