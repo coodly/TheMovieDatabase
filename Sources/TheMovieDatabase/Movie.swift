@@ -26,12 +26,15 @@ public struct Movie: Codable {
     private let posterPath: String?
     private let backdropPath: String?
     public let releaseDate: Date
-    public var cast: [Actor]?
+    public var cast: [Actor]? {
+        return credits?.cast
+    }
     public var similar: [Movie]?
     var posters: [Image]?
     private let config: Configuration
     public var collection: CollectionSummary?
-    public let genreIds: [Int]
+    public let genreIds: [Int]?
+    public let tagline: String?
     
     public var rating: Double {
         return voteAverage
@@ -42,6 +45,7 @@ public struct Movie: Codable {
     public var backdrop: Image? {
         return Image(path: backdropPath, config: config.backdropConfig)
     }
+    private let credits: Credits?
     
     public init(from decoder: Decoder) throws {
         guard let config = decoder.userInfo[.configuration] as? Configuration else {
@@ -60,11 +64,12 @@ public struct Movie: Codable {
         backdropPath = try? values.decode(String.self, forKey: .backdropPath)
         releaseDate = (try? values.decode(Date.self, forKey: .releaseDate)) ?? Date.distantPast
         self.config = config
-        cast = nil
+        credits = try? values.decode(Credits.self, forKey: .credits)
         similar = nil
         posters = nil
         collection = nil
-        genreIds = try values.decode([Int].self, forKey: .genreIds)
+        genreIds = try? values.decode([Int].self, forKey: .genreIds)
+        tagline = try? values.decode(String.self, forKey: .tagline)
     }
     
     static func loadFromData(_ index: Int, data: [String: AnyObject], config: Configuration? = nil) -> Movie? {

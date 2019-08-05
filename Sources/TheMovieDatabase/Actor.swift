@@ -19,7 +19,26 @@ import Foundation
 public struct Actor: Codable {
     public let id: Int
     public let name: String
-    public let profile: Image?
+    public var profile: Image? {
+        return Image(path: profilePath, config: config.profileConfig)
+    }
+    private let profilePath: String?
+    private let config: Configuration
+    public let character: String
+    
+    public init(from decoder: Decoder) throws {
+        guard let config = decoder.userInfo[.configuration] as? Configuration else {
+            fatalError("Missing configuration or invalid configuration")
+        }
+        
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        id = try values.decode(Int.self, forKey: .id)
+        name = try values.decode(String.self, forKey: .name)
+        profilePath = try? values.decode(String.self, forKey: .profilePath)
+        character = try values.decode(String.self, forKey: .character)
+        self.config = config
+    }
     
     static func loadFrom(_ data: [String: AnyObject], profileConfiguration: ImageConfiguration) -> [Actor] {
         guard let cast = data["cast"] as? [[String: AnyObject]] else {
@@ -53,6 +72,6 @@ public struct Actor: Codable {
             profile = Image(path: path, config: config)
         }
         
-        return Actor(id: id, name: name, profile: profile)
+        return nil
     }
 }
