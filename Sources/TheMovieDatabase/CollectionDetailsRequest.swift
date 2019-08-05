@@ -34,9 +34,4 @@ class CollectionDetailsRequest: NetworkRequest<Collection, Collection>, Configur
     override func handle(response: Collection) {
         resulthandler(response, nil)
     }
-    
-    override func handle(success response: [String : AnyObject]) {
-        let collection = Collection(json: response, config: configuration)
-        resulthandler?(collection, nil)
-    }
 }

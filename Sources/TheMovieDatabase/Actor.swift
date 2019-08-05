@@ -39,39 +39,4 @@ public struct Actor: Codable {
         character = try values.decode(String.self, forKey: .character)
         self.config = config
     }
-    
-    static func loadFrom(_ data: [String: AnyObject], profileConfiguration: ImageConfiguration) -> [Actor] {
-        guard let cast = data["cast"] as? [[String: AnyObject]] else {
-            return []
-        }
-        
-        
-        var result = [Actor]()
-        for actor in cast {
-            guard let actor = loadFromData(actor, with: profileConfiguration) else {
-                continue
-            }
-            
-            result.append(actor)
-        }
-        
-        return result
-    }
-    
-    static func loadFromData(_ data: [String: AnyObject], with config: ImageConfiguration) -> Actor? {
-        guard let name = data["name"] as? String else {
-            return nil
-        }
-        
-        guard let id = data["id"] as? Int else {
-            return nil
-        }
-        
-        var profile: Image? = nil
-        if let path = data["profile_path"] as? String {
-            profile = Image(path: path, config: config)
-        }
-        
-        return nil
-    }
 }

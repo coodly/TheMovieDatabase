@@ -67,44 +67,6 @@ class FetchDetailsRequest: NetworkRequest<Movie, Movie>, ConfigurationConsumer {
     override func handle(response: Movie) {
         resulthandler(response, nil)
     }
-
-    override func handle(success data: [String : AnyObject]) {
-        guard var result = Movie.loadFromData(0, data: data, config: self.configuration) else {
-            resulthandler(nil, nil)
-            return
-        }
-        
-        /*if let credits = data["credits"] as? [String: AnyObject] {
-            result.directors = Director.loadFrom(credits)
-            result.cast = Actor.loadFrom(credits, profileConfiguration: self.configuration.profileConfig)
-        }
-        if let production = data["production_companies"] as? [[String: AnyObject]] {
-            result.productionCompanies = ProductionCompany.loadFromData(production)
-        }*/
-        if let images = data["images"] as? [String: Any], let posters = images["posters"] as? [[String: Any]] {
-            var loaded = [Image]()
-            for poster in posters {
-                guard let path = poster["file_path"] as? String else {
-                    continue
-                }
-                
-                loaded.append(Image(path: path, config: configuration.posterConfig))
-            }
-            result.posters = loaded
-        }
-        if let similar = data["similar"] as? [String: AnyObject], let results = similar["results"] as? [[String: AnyObject]] {
-            var loaded = [Movie]()
-            for result in results {
-                if let movie = Movie.loadFromData(0, data: result, config: self.configuration) {
-                    loaded.append(movie)
-                }
-            }
-
-            result.similar = loaded
-        }
-        
-        resulthandler(result, nil)
-    }
     
     private func appendForDetails(_ include: Details) -> String {
         var append = [String]()

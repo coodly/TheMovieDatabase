@@ -73,9 +73,3 @@ public struct Collection: Codable {
         return combinedRating / Double(ratings.count)
     }
 }
-
-internal extension Collection {
-    init?(json: [String: AnyObject], config: Configuration? = nil) {
-        return nil
-    }
-}

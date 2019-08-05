@@ -46,9 +46,3 @@ public struct CollectionSummary: Codable {
         self.config = config
     }
 }
-
-extension CollectionSummary {
-    init?(data: [String: AnyObject], config: Configuration?) {
-        return nil
-    }
-}

@@ -74,8 +74,4 @@ public struct Movie: Codable {
         tagline = try? values.decode(String.self, forKey: .tagline)
         belongsToCollection = try? values.decode(CollectionSummary.self, forKey: .belongsToCollection)
     }
-    
-    static func loadFromData(_ index: Int, data: [String: AnyObject], config: Configuration? = nil) -> Movie? {
-        return nil
-    }
 }

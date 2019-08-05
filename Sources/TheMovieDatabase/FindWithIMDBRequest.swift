@@ -31,20 +31,7 @@ internal class FindWithIMDBRequest: NetworkRequest<Movie, Movie>, ConfigurationC
         GET(path, parameters: ["external_source": "imdb_id" as AnyObject, "api_key": apiKey as AnyObject])
     }
     
-    override func handle(success response: [String : AnyObject]) {
-        var movie: Movie?
-        defer {
-            resulthandler(movie, nil)
-        }
-        
-        guard let list = response["movie_results"] as? [[String: AnyObject]], let data = list.first else {
-            return
-        }
-        
-        guard let result = Movie.loadFromData(0, data: data, config: self.configuration) else {
-            return
-        }
-
-        movie = result
+    override func handle(response: Movie) {
+        resulthandler(response, nil)
     }
 }

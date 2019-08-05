@@ -68,11 +68,7 @@ extension TMDB {
     public func detailsFor(movieId: Int, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
         Logging.log("Fetch details for movieId:\(movieId)")
         let request = FetchDetailsRequest(movieId: movieId, includedDetails: details)
-        request.resulthandler = {
-            result, error in
-            
-            completion(result as? Movie, error)
-        }
+        request.resulthandler = completion
         runWithConfigCheck(request: request)
     }
 }
@@ -101,11 +97,7 @@ extension TMDB {
             request = ListMoviesInUserList(listId: listId)
         }
         
-        request.resulthandler = {
-            result, error in
-            
-            completion(result as? Cursor<Movie>, error)
-        }
+        request.resulthandler = completion
         
         runWithConfigCheck(request: request)
     }
@@ -116,11 +108,7 @@ extension TMDB {
 extension TMDB {
     public func findWithIMDB(id: String, completion: @escaping ((Movie?, Error?) -> Void)) {
         let request = FindWithIMDBRequest(imdbID: id)
-        request.resulthandler = {
-            movie, error in
-            
-            completion(movie as? Movie, error)
-        }        
+        request.resulthandler = completion
         runWithConfigCheck(request: request)
     }
 }
@@ -134,7 +122,7 @@ extension TMDB {
         request.resulthandler = {
             result, error in
             
-            completion(result as? Collection)
+            completion(result)
         }
         runWithConfigCheck(request: request)
     }
@@ -149,8 +137,7 @@ extension TMDB {
         request.resulthandler = {
             result, error in
             
-            let genres = result as? [Genre]
-            completion(genres ?? [])
+            completion(result ?? [])
         }
         request.execute()
     }

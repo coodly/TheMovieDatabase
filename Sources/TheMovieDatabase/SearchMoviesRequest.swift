@@ -32,14 +32,7 @@ internal class SearchMoviesRequest: NetworkRequest<MoviesPage, Cursor<Movie>>, C
         GET(SearchPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject, "query": term as AnyObject])
     }
     
-    override func handle(success response: [String : AnyObject]) {
-        let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
-            index, data in
-            
-            return Movie.loadFromData(index, data:data, config: self.configuration)
-        }
-        
-        let cursor = Cursor<Movie>.loadFrom(response, creation: createMovieClosure)
-        resulthandler(cursor, nil)
+    override func handle(response: MoviesPage) {
+        resulthandler(response.cursor, nil)
     }
 }

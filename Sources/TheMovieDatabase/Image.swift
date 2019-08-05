@@ -18,7 +18,7 @@ import Foundation
 
 public struct Image: Codable {
     public let path: String?
-    let config: ImageConfiguration?
+    internal let config: ImageConfiguration?
     
     public func url(for size: String = "original") -> URL? {
         guard let path = path, let config = config else {

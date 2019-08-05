@@ -35,7 +35,7 @@ internal class ListMoviesInUserList: NetworkRequest<MoviesPage, Cursor<Movie>>, 
         let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
             index, data in
             
-            return Movie.loadFromData(index, data:data, config: self.configuration)
+            return nil
         }
         
         guard let items = response["items"] as? [[String: AnyObject]] else {

@@ -36,15 +36,4 @@ internal class ListTopMoviesRequest: NetworkRequest<MoviesPage, Cursor<Movie>>, 
     override func handle(response: MoviesPage) {
         resulthandler(response.cursor, nil)
     }
-    
-    override func handle(success response: [String : AnyObject]) {
-        let createMovieClosure: (Int, [String: AnyObject]) -> (Movie?) = {
-            index, data in
-            
-            return Movie.loadFromData(index, data:data, config: self.configuration)
-        }
-        
-        let cursor = Cursor<Movie>.loadFrom(response, creation: createMovieClosure)
-        resulthandler(cursor, nil)
-    }
 }
