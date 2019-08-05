@@ -18,7 +18,7 @@ import Foundation
 
 private let ListMoviesPath = "/movie/top_rated"
 
-internal class ListTopMoviesRequest: NetworkRequest<Movie, Cursor<Movie>>, ConfigurationConsumer, CachedRequest {
+internal class ListTopMoviesRequest: NetworkRequest<MoviesPage, Cursor<Movie>>, ConfigurationConsumer, CachedRequest {
     private var page: Int
     var configuration: Configuration!
     var cacheKey: String {
@@ -31,6 +31,10 @@ internal class ListTopMoviesRequest: NetworkRequest<Movie, Cursor<Movie>>, Confi
     
     override func execute() {
         GET(ListMoviesPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject])
+    }
+    
+    override func handle(response: MoviesPage) {
+        resulthandler(response.cursor, nil)
     }
     
     override func handle(success response: [String : AnyObject]) {

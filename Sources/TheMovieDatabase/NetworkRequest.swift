@@ -16,6 +16,10 @@
 
 import Foundation
 
+extension CodingUserInfoKey {
+    internal static let configuration = CodingUserInfoKey(rawValue: "configuration")!
+}
+
 private let APIServer = "https://api.themoviedb.org/3"
 
 public struct TMDBError: Error, LocalizedError {
@@ -42,8 +46,11 @@ internal class NetworkRequest<Response: Codable, Result>:  NetworkFetchConsumer,
         formatter.dateFormat = "yyyy-MM-dd"
 
         let decoder = JSONDecoder()
+        
         decoder.dateDecodingStrategy = .formatted(formatter)
         decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.userInfo[.configuration] = Injector.sharedInsatnce.configuration
+        
         return decoder
     }()
 
@@ -63,7 +70,9 @@ internal class NetworkRequest<Response: Codable, Result>:  NetworkFetchConsumer,
         if let cachedRequest = self as? CachedRequest, let data = cache.data(for: cachedRequest.cacheKey) {
             do {
                 let response = try decoder.decode(Response.self, from: data)
+                Logging.log("Had cache hit for \(cachedRequest.cacheKey)")
                 handle(response: response)
+                return
             } catch {
                 Logging.log("Cached data error: \(error)")
             }

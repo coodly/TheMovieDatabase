@@ -50,16 +50,18 @@ public class Cursor<T> {
             index = index + 1
         }
         
-        let cursor = Cursor<T>()
-        
-        cursor.page = page
-        cursor.totalPages = total
-        cursor.items = elements
-        
-        return cursor
+        return Cursor<T>(page: page, totalPages: total, items: elements)
     }
     
     public func hasMoreResults() -> Bool {
         return page < totalPages
+    }
+    
+    convenience init(page: Int, totalPages: Int, items: [T]) {
+        self.init()
+        
+        self.page = page
+        self.totalPages = totalPages
+        self.items = items
     }
 }

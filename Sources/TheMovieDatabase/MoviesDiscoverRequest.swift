@@ -18,7 +18,7 @@ import Foundation
 
 private let MovieDiscoverPath = "/discover/movie"
 
-internal class MoviesDiscoverRequest: NetworkRequest<Movie, Cursor<Movie>>, ConfigurationConsumer {
+internal class MoviesDiscoverRequest: NetworkRequest<MoviesPage, Cursor<Movie>>, ConfigurationConsumer {
     var configuration: Configuration!
     
     private let page: Int

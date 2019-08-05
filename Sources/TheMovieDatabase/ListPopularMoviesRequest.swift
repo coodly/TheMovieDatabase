@@ -18,7 +18,17 @@ import Foundation
 
 private let ListMoviesPath = "/movie/popular"
 
-internal class ListPopularMoviesRequest: NetworkRequest<Movie, Cursor<Movie>>, ConfigurationConsumer, CachedRequest {
+internal struct MoviesPage: Codable {
+    let page: Int
+    let totalPages: Int
+    let results: [Movie]
+    
+    internal var cursor: Cursor<Movie> {
+        return Cursor<Movie>(page: page, totalPages: totalPages, items: results)
+    }
+}
+
+internal class ListPopularMoviesRequest: NetworkRequest<MoviesPage, Cursor<Movie>>, ConfigurationConsumer, CachedRequest {
     private var page: Int
     var configuration: Configuration!
     var cacheKey: String {
@@ -31,6 +41,10 @@ internal class ListPopularMoviesRequest: NetworkRequest<Movie, Cursor<Movie>>, C
     
     override func execute() {
         GET(ListMoviesPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject])
+    }
+    
+    override func handle(response: MoviesPage) {
+        resulthandler(response.cursor, nil)
     }
     
     override func handle(success response: [String : AnyObject]) {

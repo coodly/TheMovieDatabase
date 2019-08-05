@@ -34,14 +34,14 @@ public struct Collection: Codable {
         return "(\(min)-\(max))"
     }
     
-    public var averageRating: Float? {
+    public var averageRating: Double? {
         let ratings = movies.map({ $0.rating }).filter({ $0 > 0.1 })
         let combinedRating = ratings.reduce(0, +)
         guard ratings.count > 0 else {
             return nil
         }
         
-        return combinedRating / Float(ratings.count)
+        return combinedRating / Double(ratings.count)
     }
 }
 

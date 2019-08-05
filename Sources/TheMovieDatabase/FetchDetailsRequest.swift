@@ -70,13 +70,13 @@ class FetchDetailsRequest: NetworkRequest<Movie, Movie>, ConfigurationConsumer {
             return
         }
         
-        if let credits = data["credits"] as? [String: AnyObject] {
+        /*if let credits = data["credits"] as? [String: AnyObject] {
             result.directors = Director.loadFrom(credits)
             result.cast = Actor.loadFrom(credits, profileConfiguration: self.configuration.profileConfig)
         }
         if let production = data["production_companies"] as? [[String: AnyObject]] {
             result.productionCompanies = ProductionCompany.loadFromData(production)
-        }
+        }*/
         if let images = data["images"] as? [String: Any], let posters = images["posters"] as? [[String: Any]] {
             var loaded = [Image]()
             for poster in posters {

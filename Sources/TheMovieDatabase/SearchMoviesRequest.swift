@@ -18,7 +18,7 @@ import Foundation
 
 private let SearchPath = "/search/movie"
 
-internal class SearchMoviesRequest: NetworkRequest<Movie, Cursor<Movie>>, ConfigurationConsumer {
+internal class SearchMoviesRequest: NetworkRequest<MoviesPage, Cursor<Movie>>, ConfigurationConsumer {
     var configuration: Configuration!
     
     private let page: Int

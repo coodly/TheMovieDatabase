@@ -81,7 +81,7 @@ extension TMDB {
 // MARK: Lists
 extension TMDB {
     public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc), completion: @escaping TMDBCompletionClosure) {
-        let request: NetworkRequest<Movie, Cursor<Movie>>
+        let request: NetworkRequest<MoviesPage, Cursor<Movie>>
         switch list {
         case .topRated:
             request = ListTopMoviesRequest(page: page)

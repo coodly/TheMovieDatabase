@@ -17,72 +17,57 @@
 import Foundation
 
 public struct Movie: Codable {
-    private static let dateFormatter: DateFormatter =  {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter
-    }()
-
-    public let index: Int
     public let id: Int
     public let title: String
     public let originalTitle: String?
     public let overview: String?
-    public let poster: Image?
-    public let backdrop: Image?
-    public let rating: Float
-    public var popularity: Double
+    public let voteAverage: Double
+    public let popularity: Double
+    private let posterPath: String?
+    private let backdropPath: String?
     public let releaseDate: Date
-    public var directors: [Director]?
-    public var productionCompanies: [ProductionCompany]?
     public var cast: [Actor]?
     public var similar: [Movie]?
-    public var posters: [Image]?
+    var posters: [Image]?
+    private let config: Configuration
     public var collection: CollectionSummary?
     public let genreIds: [Int]
-
+    
+    public var rating: Double {
+        return voteAverage
+    }
+    public var poster: Image? {
+        return Image(path: posterPath, config: config.posterConfig)
+    }
+    public var backdrop: Image? {
+        return Image(path: backdropPath, config: config.backdropConfig)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        guard let config = decoder.userInfo[.configuration] as? Configuration else {
+            fatalError("Missing configuration or invalid configuration")
+        }
+        
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        id = try values.decode(Int.self, forKey: .id)
+        title = try values.decode(String.self, forKey: .title)
+        originalTitle = try? values.decode(String.self, forKey: .originalTitle)
+        overview = try? values.decode(String.self, forKey: .overview)
+        voteAverage = (try? values.decode(Double.self, forKey: .voteAverage)) ?? 0.0
+        popularity = (try? values.decode(Double.self, forKey: .popularity)) ?? 0.0
+        posterPath = try? values.decode(String.self, forKey: .posterPath)
+        backdropPath = try? values.decode(String.self, forKey: .backdropPath)
+        releaseDate = (try? values.decode(Date.self, forKey: .releaseDate)) ?? Date.distantPast
+        self.config = config
+        cast = nil
+        similar = nil
+        posters = nil
+        collection = nil
+        genreIds = try values.decode([Int].self, forKey: .genreIds)
+    }
+    
     static func loadFromData(_ index: Int, data: [String: AnyObject], config: Configuration? = nil) -> Movie? {
-        guard let id = data["id"] as? Int else {
-            Logging.log("id not found")
-            return nil
-        }
-        
-        guard let title = data["title"] as? String else {
-            Logging.log("Title not found")
-            return nil
-        }
-        
-        //TODO jaanus: check, report, or something
-        guard let voteAverage = data["vote_average"] as? NSNumber else {
-            Logging.log("Rating not found")
-            return nil
-        }
-        let rating = voteAverage.floatValue
-        let popularity = data["popularity"] as? Double ?? 0.0
-        
-        let releaseDate: Date
-        if let dateString = data["release_date"] as? String, let date = Movie.dateFormatter.date(from: dateString) {
-            releaseDate = date
-        } else {
-            releaseDate = Date.distantPast
-        }
-        
-        let originalTitle = data["original_title"] as? String
-        let posterPath = data["poster_path"] as? String
-        let overview = data["overview"] as? String
-        let poster = Image(path: posterPath, config: config?.posterConfig)
-        let backdropPath = data["backdrop_path"] as? String
-        let backdrop = Image(path: backdropPath, config: config?.backdropConfig)
-        
-        let collection: CollectionSummary?
-        if let summaryData = data["belongs_to_collection"] as? [String: AnyObject], let summary = CollectionSummary(data: summaryData, config: config) {
-            collection = summary
-        } else {
-            collection = nil
-        }
-        
-        let genreIds = data["genre_ids"] as? [Int] ?? []
-        
-        return Movie(index: index, id: id, title: title, originalTitle: originalTitle, overview: overview, poster: poster, backdrop: backdrop, rating: rating, popularity: popularity, releaseDate: releaseDate, directors: nil, productionCompanies: nil, cast: nil, similar: nil, posters: nil, collection: collection, genreIds: genreIds)
+        return nil
     }
 }
