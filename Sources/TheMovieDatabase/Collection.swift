@@ -20,9 +20,38 @@ public struct Collection: Codable {
     public let id: Int
     public let name: String
     public let overview: String
-    public let poster: Image
-    public let backdrop: Image
-    public let movies: [Movie]
+    public var poster: Image {
+        return Image(path: posterPath, config: config.posterConfig)
+    }
+    public var backdrop: Image {
+        return Image(path: backdropPath, config: config.backdropConfig)
+    }
+    public var movies: [Movie] {
+        return parts
+    }
+    
+    private let posterPath: String?
+    private let backdropPath: String?
+    private let parts: [Movie]
+    
+    private let config: Configuration
+    
+    public init(from decoder: Decoder) throws {
+        guard let config = decoder.userInfo[.configuration] as? Configuration else {
+            fatalError("Missing configuration or invalid configuration")
+        }
+        
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+        id = try values.decode(Int.self, forKey: .id)
+        name = try values.decode(String.self, forKey: .name)
+        overview = try values.decode(String.self, forKey: .overview)
+        posterPath = try? values.decode(String.self, forKey: .posterPath)
+        backdropPath = try? values.decode(String.self, forKey: .backdropPath)
+        parts = try values.decode([Movie].self, forKey: .parts)
+        
+        self.config = config
+    }
     
     public var formattedPeriod: String? {
         let gregorian = Calendar(identifier: .gregorian)
@@ -47,35 +76,6 @@ public struct Collection: Codable {
 
 internal extension Collection {
     init?(json: [String: AnyObject], config: Configuration? = nil) {
-        guard let id = json["id"] as? Int else {
-            return nil
-        }
-        
-        guard let name = json["name"] as? String else {
-            return nil
-        }
-        
-        guard let overview = json["overview"] as? String else {
-            return nil
-        }
-        
-        guard let parts = json["parts"] as? [[String: AnyObject]] else {
-            return nil
-        }
-        
-        var movies = [Movie]()
-        for (index, part) in parts.enumerated() {
-            if let movie = Movie.loadFromData(index, data: part, config: config) {
-                movies.append(movie)
-            }
-        }
-        
-        self.id = id
-        self.name = name
-        self.overview = overview
-        self.movies = movies
-        
-        poster = Image(path: json["poster_path"] as? String, config: config?.posterConfig)
-        backdrop = Image(path: json["backdrop_path"] as? String, config: config?.backdropConfig)
+        return nil
     }
 }

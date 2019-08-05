@@ -31,6 +31,10 @@ class CollectionDetailsRequest: NetworkRequest<Collection, Collection>, Configur
         GET(path, parameters: ["api_key": apiKey as AnyObject])
     }
     
+    override func handle(response: Collection) {
+        resulthandler(response, nil)
+    }
+    
     override func handle(success response: [String : AnyObject]) {
         let collection = Collection(json: response, config: configuration)
         resulthandler?(collection, nil)
