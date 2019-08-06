@@ -30,7 +30,9 @@ public struct Movie: Codable {
         return credits?.cast
     }
     public var similar: [Movie]?
-    var posters: [Image]?
+    public var posters: [Image]? {
+        return images?.posters.compactMap({ Image(path: $0.filePath, config: config.posterConfig) })
+    }
     private let config: Configuration
     public var collection: CollectionSummary? {
         return belongsToCollection
@@ -49,6 +51,7 @@ public struct Movie: Codable {
     }
     private let credits: Credits?
     private let belongsToCollection: CollectionSummary?
+    private let images: Images?
     
     public init(from decoder: Decoder) throws {
         guard let config = decoder.userInfo[.configuration] as? Configuration else {
@@ -69,7 +72,7 @@ public struct Movie: Codable {
         self.config = config
         credits = try? values.decode(Credits.self, forKey: .credits)
         similar = (try? values.decode(MoviesPage.self, forKey: .similar))?.results
-        posters = nil
+        images = try? values.decode(Images.self, forKey: .images)
         genreIds = try? values.decode([Int].self, forKey: .genreIds)
         tagline = try? values.decode(String.self, forKey: .tagline)
         belongsToCollection = try? values.decode(CollectionSummary.self, forKey: .belongsToCollection)
