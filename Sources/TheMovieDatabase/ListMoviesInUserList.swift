@@ -16,7 +16,7 @@
 
 import Foundation
 
-private let ListPathBase = "/list/%@"
+private let ListPathBase = "/list/"
 
 internal struct MoviesListResult: Codable {
     let items: [Movie]
@@ -31,7 +31,7 @@ internal class ListMoviesInUserList: NetworkRequest<MoviesListResult, Cursor<Mov
     }
 
     override func execute() {
-        let path = String(format: ListPathBase, NSNumber(value: listId))
+        let path = "\(ListPathBase)\(listId)"
         GET(path, parameters: ["api_key": apiKey as AnyObject])
     }
 

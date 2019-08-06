@@ -16,7 +16,7 @@
 
 import Foundation
 
-private let ByExternalIDPathBase = "/find/%@"
+private let ByExternalIDPathBase = "/find/"
 
 internal struct FindResult: Codable {
     let movieResults: [Movie]
@@ -31,7 +31,7 @@ internal class FindWithIMDBRequest: NetworkRequest<FindResult, Movie>, Configura
     }
     
     override func execute() {
-        let path = String(format: ByExternalIDPathBase, imdbID)
+        let path = "\(ByExternalIDPathBase)\(imdbID)"
         GET(path, parameters: ["external_source": "imdb_id" as AnyObject, "api_key": apiKey as AnyObject])
     }
     
