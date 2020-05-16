@@ -151,3 +151,22 @@ extension TMDB {
         return Image(path: path, config: Injector.sharedInsatnce.configuration?.posterConfig)
     }
 }
+
+// MARK: -
+// MARK: Supported languages
+extension TMDB {
+    public func listLanguages(completion: @escaping ((Result<[Language], Error>) -> Void)) {
+        let request = ListLanguagesRequest()
+        inject(into: request)
+        request.resulthandler = {
+            languages, error in
+            
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(languages ?? []))
+            }
+        }
+        request.execute()
+    }
+}
