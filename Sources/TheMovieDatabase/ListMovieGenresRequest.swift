@@ -23,8 +23,13 @@ internal struct GenresResponse: Codable {
 }
 
 internal class ListMovieGenresRequest: NetworkRequest<GenresResponse, [Genre]> {
+    private let language: String
+    internal init(language: String) {
+        self.language = language
+    }
+    
     override func execute() {
-        GET(ListMovieGenresPath, parameters: ["api_key": apiKey as AnyObject])
+        GET(ListMovieGenresPath, parameters: ["api_key": apiKey as AnyObject, "language": language as AnyObject])
     }
     
     override func handle(response: GenresResponse) {

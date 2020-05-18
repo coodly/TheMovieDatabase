@@ -134,8 +134,8 @@ extension TMDB {
 // MARK: -
 // MARK: Movie genres list
 extension TMDB {
-    public func listMovieGenres(completion: @escaping ([Genre]) -> ()) {
-        let request = ListMovieGenresRequest()
+    public func listMovieGenres(in language: String = "en", completion: @escaping ([Genre]) -> ()) {
+        let request = ListMovieGenresRequest(language: language)
         inject(into: request)
         request.resulthandler = {
             result, error in
