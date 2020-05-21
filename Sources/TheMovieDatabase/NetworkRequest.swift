@@ -15,6 +15,9 @@
  */
 
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 extension CodingUserInfoKey {
     internal static let configuration = CodingUserInfoKey(rawValue: "configuration")!
