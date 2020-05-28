@@ -52,6 +52,7 @@ public struct Movie: Codable {
     private let credits: Credits?
     private let belongsToCollection: CollectionSummary?
     private let images: Images?
+    public let videos: [Video]?
     
     public init(from decoder: Decoder) throws {
         guard let config = decoder.userInfo[.configuration] as? Configuration else {
@@ -76,5 +77,6 @@ public struct Movie: Codable {
         genreIds = try? values.decode([Int].self, forKey: .genreIds)
         tagline = try? values.decode(String.self, forKey: .tagline)
         belongsToCollection = try? values.decode(CollectionSummary.self, forKey: .belongsToCollection)
+        videos = (try? values.decode(VideosPage.self, forKey: .videos))?.results
     }
 }
