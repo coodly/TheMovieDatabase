@@ -40,6 +40,10 @@ public struct TMDBError: Codable, Error, LocalizedError {
     }
 }
 
+extension TMDBError {
+    static let unknown = TMDBError(statusCode: -1, statusMessage: "Unknown error")
+}
+
 private enum Method: String {
     case POST
     case GET
@@ -133,7 +137,7 @@ internal class NetworkRequest<Response: Codable, Result>:  NetworkFetchConsumer,
             return
         }
         
-        Logging.log("Response \(String(data: data, encoding: .utf8).debugDescription)")
+        Logging.log("Response \(String(data: data, encoding: .utf8) ?? "-")")
         do {
             let response = try decoder.decode(Response.self, from: data)
             handle(response: response)
