@@ -60,15 +60,23 @@ public class TMDB: InjectionHandler {
 // MARK: - 
 // MARK: Movie details
 extension TMDB {
-    public func detailsFor(movie: Movie, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
+    public func detailsFor(movie: Movie, inclidedDetails details: Details = [], completion: @escaping (Result<Movie, Error>) -> ()) {
         Logging.log("Fetch details for movie:\(movie)")
         detailsFor(movieId: movie.id, inclidedDetails: details, completion: completion)
     }
     
-    public func detailsFor(movieId: Int, inclidedDetails details: Details = [], completion: @escaping (Movie?, Error?) -> ()) {
+    public func detailsFor(movieId: Int, inclidedDetails details: Details = [], completion: @escaping (Result<Movie, Error>) -> ()) {
         Logging.log("Fetch details for movieId:\(movieId)")
         let request = FetchDetailsRequest(movieId: movieId, includedDetails: details)
-        request.resulthandler = completion
+        request.resulthandler = {
+            movie, error in
+            
+            if let movie = movie {
+                completion(.success(movie))
+            } else {
+                completion(.failure(error ?? TMDBError.unknown))
+            }
+        }
         runWithConfigCheck(request: request)
     }
 }
