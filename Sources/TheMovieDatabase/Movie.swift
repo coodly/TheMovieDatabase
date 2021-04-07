@@ -26,6 +26,7 @@ public struct Movie: Codable {
     private let posterPath: String?
     private let backdropPath: String?
     public let releaseDate: Date
+    public let runtime: Int
     public var cast: [Actor]? {
         return credits?.cast
     }
@@ -78,5 +79,6 @@ public struct Movie: Codable {
         tagline = try? values.decode(String.self, forKey: .tagline)
         belongsToCollection = try? values.decode(CollectionSummary.self, forKey: .belongsToCollection)
         videos = (try? values.decode(VideosPage.self, forKey: .videos))?.results
+        runtime = (try? values.decode(Int.self, forKey: .runtime)) ?? -1
     }
 }
