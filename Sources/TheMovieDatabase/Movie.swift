@@ -39,6 +39,7 @@ public struct Movie: Codable {
         return belongsToCollection
     }
     public let genreIds: [Int]?
+    public let genres: [Genre]?
     public let tagline: String?
     
     public var rating: Double {
@@ -76,6 +77,7 @@ public struct Movie: Codable {
         similar = (try? values.decode(MoviesPage.self, forKey: .similar))?.results
         images = try? values.decode(Images.self, forKey: .images)
         genreIds = try? values.decode([Int].self, forKey: .genreIds)
+        genres = try? values.decode([Genre].self, forKey: .genres)
         tagline = try? values.decode(String.self, forKey: .tagline)
         belongsToCollection = try? values.decode(CollectionSummary.self, forKey: .belongsToCollection)
         videos = (try? values.decode(VideosPage.self, forKey: .videos))?.results
