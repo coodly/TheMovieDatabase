@@ -16,7 +16,7 @@
 
 import Foundation
 
-struct Configuration: Codable {
+struct Configuration: Codable, Equatable {
     let images: ImagesConfig
     
     var backdropConfig: ImageConfiguration {
@@ -32,7 +32,7 @@ struct Configuration: Codable {
     }
 }
 
-struct ImagesConfig: Codable {
+struct ImagesConfig: Codable, Equatable {
     let baseUrl: URL
     let secureBaseUrl: URL
     let backdropSizes: [String]

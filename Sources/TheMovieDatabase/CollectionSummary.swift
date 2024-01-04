@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct CollectionSummary: Codable {
+public struct CollectionSummary: Codable, Equatable {
     public let id: Int
     public let name: String
     public var poster: Image? {

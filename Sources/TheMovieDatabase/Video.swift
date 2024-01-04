@@ -20,13 +20,13 @@ internal struct VideosPage: Codable {
     let results: [Video]
 }
 
-public struct Video: Codable {
-    public enum Site: String, Codable {
+public struct Video: Codable, Equatable {
+    public enum Site: String, Codable, Equatable {
         case youtube = "YouTube"
         case vimeo = "Vimeo"
     }
     
-    public enum VideoType: String, Codable {
+    public enum VideoType: String, Codable, Equatable {
         case trailer = "Trailer"
         case teaser = "Teaser"
         case clip = "Clip"
