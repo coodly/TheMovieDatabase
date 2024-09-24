@@ -19,62 +19,62 @@ import Foundation
 private let ConfigInvalidationTimeSecods = TimeInterval(60 * 60 * 24 * 3)
 
 internal struct CachedConfiguration: Codable {
-    let configuration: Configuration
-    let time: Date
+  let configuration: Configuration
+  let time: Date
     
-    internal func write() {
-        do {
-            let data = try JSONEncoder().encode(self)
-            if FileManager.default.fileExists(atPath: CachedConfiguration.configFilePath.path) {
-                try? FileManager.default.removeItem(at: CachedConfiguration.configFilePath)
-            }
-            try data.write(to: CachedConfiguration.configFilePath)
-        } catch {
-            Logging.log("Write config error: \(error)")
-        }
+  internal func write() {
+    do {
+      let data = try JSONEncoder().encode(self)
+      if FileManager.default.fileExists(atPath: CachedConfiguration.configFilePath.path) {
+        try? FileManager.default.removeItem(at: CachedConfiguration.configFilePath)
+      }
+      try data.write(to: CachedConfiguration.configFilePath)
+    } catch {
+      Logging.log("Write config error: \(error)")
     }
+  }
     
-    internal static func load() -> CachedConfiguration? {
-        guard FileManager.default.fileExists(atPath: configFilePath.path) else {
-            Logging.log("No config file")
-            return nil
-        }
-        
-        guard let data = try? Data(contentsOf: configFilePath) else {
-            Logging.log("No data")
-            return nil
-        }
-        
-        do {
-            let loaded = try JSONDecoder().decode(CachedConfiguration.self, from: data)
-            
-            if Date().timeIntervalSince(loaded.time) > ConfigInvalidationTimeSecods {
-                Logging.log("Config cache expired: \(loaded.time)")
-                return nil
-            }
-            
-            return loaded
-        } catch {
-            Logging.log("Config decode error: \(error)")
-            return nil
-        }
+  internal static func load() -> CachedConfiguration? {
+    guard FileManager.default.fileExists(atPath: configFilePath.path) else {
+      Logging.log("No config file")
+      return nil
     }
+        
+    guard let data = try? Data(contentsOf: configFilePath) else {
+      Logging.log("No data")
+      return nil
+    }
+        
+    do {
+      let loaded = try JSONDecoder().decode(CachedConfiguration.self, from: data)
+            
+      if Date().timeIntervalSince(loaded.time) > ConfigInvalidationTimeSecods {
+        Logging.log("Config cache expired: \(loaded.time)")
+        return nil
+      }
+            
+      return loaded
+    } catch {
+      Logging.log("Config decode error: \(error)")
+      return nil
+    }
+  }
     
-    private static var configFilePath: URL = {
-        return workingFilesDirectory.appendingPathComponent("Configuration.json")
-    }()
+  private static var configFilePath: URL = {
+    return workingFilesDirectory.appendingPathComponent("Configuration.json")
+  }()
     
-    private static var workingFilesDirectory: URL = {
-        let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
-        let last = urls.last!
-        let identifier = Bundle.main.bundleIdentifier ?? "org.themoviedb.www"
-        let dbIdentifier = identifier + ".tmdb"
-        let dbFolder = last.appendingPathComponent(dbIdentifier)
-        do {
-            try FileManager.default.createDirectory(at: dbFolder, withIntermediateDirectories: true, attributes: nil)
-        } catch let error as NSError {
-            Logging.log("Create tmdb folder error \(error)")
-        }
-        return dbFolder
-    }()
+  private static var workingFilesDirectory: URL = {
+    let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+    let last = urls.last!
+    let identifier = Bundle.main.bundleIdentifier ?? "org.themoviedb.www"
+    let dbIdentifier = identifier + ".tmdb"
+    let dbFolder = last.appendingPathComponent(dbIdentifier)
+    do {
+      try FileManager.default.createDirectory(at: dbFolder, withIntermediateDirectories: true, attributes: nil)
+    } catch let error as NSError {
+      Logging.log("Create tmdb folder error \(error)")
+    }
+    return dbFolder
+  }()
 }

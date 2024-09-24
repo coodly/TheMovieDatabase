@@ -19,24 +19,24 @@ import Foundation
 private let ListPathBase = "/list/"
 
 internal struct MoviesListResult: Codable {
-    let items: [Movie]
+  let items: [Movie]
 }
 
 internal class ListMoviesInUserList: NetworkRequest<MoviesListResult, Cursor<Movie>>, ConfigurationConsumer {
-    private var listId: Int
-    var configuration: Configuration!
-    
-    init(listId: Int) {
-        self.listId = listId
-    }
+  private var listId: Int
+  var configuration: Configuration!
 
-    override func execute() {
-        let path = "\(ListPathBase)\(listId)"
-        GET(path, parameters: ["api_key": apiKey as AnyObject])
-    }
+  init(listId: Int) {
+    self.listId = listId
+  }
 
-    override func handle(response: MoviesListResult) {
-        let cursor = Cursor(page: 1, totalPages: response.items.count, items: response.items)
-        resulthandler(cursor, nil)
-    }
+  override func execute() {
+    let path = "\(ListPathBase)\(listId)"
+    GET(path, parameters: ["api_key": apiKey as AnyObject])
+  }
+
+  override func handle(response: MoviesListResult) {
+    let cursor = Cursor(page: 1, totalPages: response.items.count, items: response.items)
+    resulthandler(cursor, nil)
+  }
 }

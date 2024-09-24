@@ -19,57 +19,57 @@ import Foundation
 private let MoviesPerPage = 20
 
 public class Cursor<T> {
-    public var page: Int!
-    internal var totalPages: Int!
-    public var items: [T]!
+  public var page: Int!
+  internal var totalPages: Int!
+  public var items: [T]!
     
-    internal class func loadFrom(_ data: [String: AnyObject], creation: (Int, [String: AnyObject]) -> (T?)) -> Cursor<T>? {
-        guard let page = data["page"] as? Int else {
-            Logging.log("Page not found from data")
-            return nil
-        }
+  internal class func loadFrom(_ data: [String: AnyObject], creation: (Int, [String: AnyObject]) -> (T?)) -> Cursor<T>? {
+    guard let page = data["page"] as? Int else {
+      Logging.log("Page not found from data")
+      return nil
+    }
         
-        guard let total = data["total_pages"] as? Int else {
-            Logging.log("Total pages not found")
-            return nil
-        }
+    guard let total = data["total_pages"] as? Int else {
+      Logging.log("Total pages not found")
+      return nil
+    }
         
-        guard let results = data["results"] as? [[String: AnyObject]] else {
-            Logging.log("Results element not found")
-            return nil
-        }
+    guard let results = data["results"] as? [[String: AnyObject]] else {
+      Logging.log("Results element not found")
+      return nil
+    }
         
-        let loaded = (page - 1) * MoviesPerPage
-        var index = loaded + 1
-        var elements = [T]()
-        for result in results {
-            if let created = creation(index, result) {
-                elements.append(created)
-            }
+    let loaded = (page - 1) * MoviesPerPage
+    var index = loaded + 1
+    var elements = [T]()
+    for result in results {
+      if let created = creation(index, result) {
+        elements.append(created)
+      }
             
-            index = index + 1
-        }
+      index = index + 1
+    }
         
-        return Cursor<T>(page: page, totalPages: total, items: elements)
-    }
+    return Cursor<T>(page: page, totalPages: total, items: elements)
+  }
     
-    public func hasMoreResults() -> Bool {
-        return page < totalPages
-    }
+  public func hasMoreResults() -> Bool {
+    return page < totalPages
+  }
     
-    convenience init(page: Int, totalPages: Int, items: [T]) {
-        self.init()
+  convenience init(page: Int, totalPages: Int, items: [T]) {
+    self.init()
         
-        self.page = page
-        self.totalPages = totalPages
-        self.items = items
-    }
+    self.page = page
+    self.totalPages = totalPages
+    self.items = items
+  }
     
-    convenience init(items: [T]) {
-        self.init()
+  convenience init(items: [T]) {
+    self.init()
         
-        self.page = 1
-        self.totalPages = items.count
-        self.items = items
-    }
+    self.page = 1
+    self.totalPages = items.count
+    self.items = items
+  }
 }

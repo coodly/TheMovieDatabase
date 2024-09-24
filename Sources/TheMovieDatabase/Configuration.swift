@@ -17,25 +17,25 @@
 import Foundation
 
 struct Configuration: Codable, Equatable {
-    let images: ImagesConfig
-    
-    var backdropConfig: ImageConfiguration {
-        return ImageConfiguration(baseURL: images.secureBaseUrl, sizes: images.backdropSizes)
-    }
+  let images: ImagesConfig
 
-    var posterConfig: ImageConfiguration {
-        return ImageConfiguration(baseURL: images.secureBaseUrl, sizes: images.posterSizes)
-    }
+  var backdropConfig: ImageConfiguration {
+    return ImageConfiguration(baseURL: images.secureBaseUrl, sizes: images.backdropSizes)
+  }
 
-    var profileConfig: ImageConfiguration {
-        return ImageConfiguration(baseURL: images.secureBaseUrl, sizes: images.profileSizes)
-    }
+  var posterConfig: ImageConfiguration {
+    return ImageConfiguration(baseURL: images.secureBaseUrl, sizes: images.posterSizes)
+  }
+
+  var profileConfig: ImageConfiguration {
+    return ImageConfiguration(baseURL: images.secureBaseUrl, sizes: images.profileSizes)
+  }
 }
 
 struct ImagesConfig: Codable, Equatable {
-    let baseUrl: URL
-    let secureBaseUrl: URL
-    let backdropSizes: [String]
-    let posterSizes: [String]
-    let profileSizes: [String]
+  let baseUrl: URL
+  let secureBaseUrl: URL
+  let backdropSizes: [String]
+  let posterSizes: [String]
+  let profileSizes: [String]
 }

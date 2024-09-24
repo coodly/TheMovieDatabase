@@ -17,13 +17,13 @@
 import Foundation
 
 public enum SortDirection: String {
-    case asc
-    case desc
+  case asc
+  case desc
 }
 
 public enum SortBy {
-    case none
-    case rating(SortDirection)
-    case popularity(SortDirection)
-    case releaseDate(SortDirection)
+  case none
+  case rating(SortDirection)
+  case popularity(SortDirection)
+  case releaseDate(SortDirection)
 }

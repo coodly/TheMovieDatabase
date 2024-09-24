@@ -18,26 +18,26 @@ import XCTest
 @testable import TheMovieDatabase
 
 class MovieTests: XCTestCase, JSONLoader {
-    func testListMovieParse() {
-        let data = self.json(from: "movie-in-list") as [String: AnyObject]
-        
-        let movie = Movie.loadFromData(0, data: data)
-        XCTAssertNotNil(movie)
-        XCTAssertNotNil(movie?.overview)
-        XCTAssertNil(movie?.collection)
-    }
-    
-    func testParseDetailsWithoutCollection() {
-        let data = self.json(from: "movie-details-without-collection") as [String: AnyObject]
-        
-        let movie = Movie.loadFromData(0, data: data)
-        XCTAssertNil(movie?.collection)
-    }
+  func testListMovieParse() {
+    let data = self.json(from: "movie-in-list") as [String: AnyObject]
 
-    func testParseDetailsWithCollectionSummary() {
-        let data = self.json(from: "movie-details-with-collection") as [String: AnyObject]
-        
-        let movie = Movie.loadFromData(0, data: data)
-        XCTAssertNotNil(movie?.collection)
-    }
+    let movie = Movie.loadFromData(0, data: data)
+    XCTAssertNotNil(movie)
+    XCTAssertNotNil(movie?.overview)
+    XCTAssertNil(movie?.collection)
+  }
+
+  func testParseDetailsWithoutCollection() {
+    let data = self.json(from: "movie-details-without-collection") as [String: AnyObject]
+
+    let movie = Movie.loadFromData(0, data: data)
+    XCTAssertNil(movie?.collection)
+  }
+
+  func testParseDetailsWithCollectionSummary() {
+    let data = self.json(from: "movie-details-with-collection") as [String: AnyObject]
+
+    let movie = Movie.loadFromData(0, data: data)
+    XCTAssertNotNil(movie?.collection)
+  }
 }

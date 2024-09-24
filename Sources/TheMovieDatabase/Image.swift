@@ -17,42 +17,42 @@
 import Foundation
 
 public struct Image: Codable, Equatable {
-    public let path: String?
-    internal let config: ImageConfiguration?
+  public let path: String?
+  internal let config: ImageConfiguration?
     
-    public func url(for size: String = "original") -> URL? {
-        guard let path = path, let config = config else {
-            return nil
-        }
-        
-        let usedSize: String
-        if config.sizes.contains(size) {
-            usedSize = size
-        } else {
-            Logging.log("\(size) not in \(config.sizes). Will use 'original'")
-            usedSize = "original"
-        }
-        
-        let result = "\(config.baseURL)\(usedSize)\(path)"
-        return URL(string: result)
+  public func url(for size: String = "original") -> URL? {
+    guard let path = path, let config = config else {
+      return nil
     }
-    
-    public func url(matching width: Int) -> URL? {
-        guard let conf = config else {
-            return nil
-        }
         
-        for size in conf.sizes {
-            let stripped = size.replacingOccurrences(of: "w", with: "")
-            guard let value = Int(stripped) else {
-                continue
-            }
+    let usedSize: String
+    if config.sizes.contains(size) {
+      usedSize = size
+    } else {
+      Logging.log("\(size) not in \(config.sizes). Will use 'original'")
+      usedSize = "original"
+    }
+        
+    let result = "\(config.baseURL)\(usedSize)\(path)"
+    return URL(string: result)
+  }
+    
+  public func url(matching width: Int) -> URL? {
+    guard let conf = config else {
+      return nil
+    }
+        
+    for size in conf.sizes {
+      let stripped = size.replacingOccurrences(of: "w", with: "")
+      guard let value = Int(stripped) else {
+        continue
+      }
             
-            if value > width {
-                return url(for: size)
-            }
-        }
-        
-        return url()
+      if value > width {
+        return url(for: size)
+      }
     }
+        
+    return url()
+  }
 }

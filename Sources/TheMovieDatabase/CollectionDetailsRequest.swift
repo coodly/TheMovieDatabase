@@ -19,19 +19,19 @@ import Foundation
 private let CollectionDetailsPath = "/collection"
 
 class CollectionDetailsRequest: NetworkRequest<Collection, Collection>, ConfigurationConsumer {
-    var configuration: Configuration!
-    
-    private let id: Int
-    init(collectionId: Int) {
-        id = collectionId
-    }
-    
-    override func execute() {
-        let path = "\(CollectionDetailsPath)/\(id)"
-        GET(path, parameters: ["api_key": apiKey as AnyObject])
-    }
-    
-    override func handle(response: Collection) {
-        resulthandler(response, nil)
-    }
+  var configuration: Configuration!
+
+  private let id: Int
+  init(collectionId: Int) {
+    id = collectionId
+  }
+
+  override func execute() {
+    let path = "\(CollectionDetailsPath)/\(id)"
+    GET(path, parameters: ["api_key": apiKey as AnyObject])
+  }
+
+  override func handle(response: Collection) {
+    resulthandler(response, nil)
+  }
 }

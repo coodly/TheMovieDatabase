@@ -17,19 +17,19 @@
 import Foundation
 
 protocol JSONLoader {
-    func json<Result>(from file: String) -> Result
+  func json<Result>(from file: String) -> Result
 }
 
 extension JSONLoader {
-    func data(from file: String) -> Data {
-        let path = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-            .appendingPathComponent("TestData", isDirectory: true)
-            .appendingPathComponent("\(file).json")
-        return try! Data(contentsOf: path)
-    }
-    
-    func json<Result>(from file: String) -> Result {
-        let data =  self.data(from: file)
-        return try! JSONSerialization.jsonObject(with: data, options: []) as! Result
-    }
+  func data(from file: String) -> Data {
+    let path = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+      .appendingPathComponent("TestData", isDirectory: true)
+      .appendingPathComponent("\(file).json")
+    return try! Data(contentsOf: path)
+  }
+
+  func json<Result>(from file: String) -> Result {
+    let data =  self.data(from: file)
+    return try! JSONSerialization.jsonObject(with: data, options: []) as! Result
+  }
 }

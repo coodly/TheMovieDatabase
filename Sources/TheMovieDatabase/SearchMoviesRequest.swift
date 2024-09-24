@@ -19,20 +19,20 @@ import Foundation
 private let SearchPath = "/search/movie"
 
 internal class SearchMoviesRequest: NetworkRequest<MoviesPage, Cursor<Movie>>, ConfigurationConsumer {
-    var configuration: Configuration!
-    
-    private let page: Int
-    private let term: String
-    init(page: Int, term: String) {
-        self.page = page
-        self.term = term
-    }
-    
-    override func execute() {
-        GET(SearchPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject, "query": term as AnyObject])
-    }
-    
-    override func handle(response: MoviesPage) {
-        resulthandler(response.cursor, nil)
-    }
+  var configuration: Configuration!
+
+  private let page: Int
+  private let term: String
+  init(page: Int, term: String) {
+    self.page = page
+    self.term = term
+  }
+
+  override func execute() {
+    GET(SearchPath, parameters: ["api_key": apiKey as AnyObject, "page": page as AnyObject, "query": term as AnyObject])
+  }
+
+  override func handle(response: MoviesPage) {
+    resulthandler(response.cursor, nil)
+  }
 }

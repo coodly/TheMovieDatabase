@@ -17,5 +17,5 @@
 import Foundation
 
 internal struct Credits: Codable, Equatable {
-    let cast: [Actor]
+  let cast: [Actor]
 }

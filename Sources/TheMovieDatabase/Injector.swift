@@ -17,51 +17,51 @@
 import Foundation
 
 internal protocol InjectionHandler {
-    func inject(into: AnyObject)
+  func inject(into: AnyObject)
 }
 
 internal extension InjectionHandler {
-    func inject(into: AnyObject) {
-        Injector.sharedInsatnce.inject(into: into)
-    }
+  func inject(into: AnyObject) {
+    Injector.sharedInsatnce.inject(into: into)
+  }
 }
 
 internal class Injector {
-    static let sharedInsatnce = Injector()
-    var apiKey: String!
-    var networkFetch: NetworkFetch!
-    var configuration: Configuration? = CachedConfiguration.load()?.configuration
-    private lazy var cache: ListCache = {
-        return ListCache()
-    }()
-    
-    func inject(into: AnyObject) {
-        if var consumer = into as? APIKeyConsumer {
-            consumer.apiKey = apiKey
-        }
-        
-        if var consumer = into as? NetworkFetchConsumer {
-            consumer.fetch = networkFetch
-        }
-        
-        if var consumer = into as? ConfigurationConsumer {
-            consumer.configuration = configuration!
-        }
+  static let sharedInsatnce = Injector()
+  var apiKey: String!
+  var networkFetch: NetworkFetch!
+  var configuration: Configuration? = CachedConfiguration.load()?.configuration
+  private lazy var cache: ListCache = {
+    return ListCache()
+  }()
 
-        if var consumer = into as? ListCacheConsumer {
-            consumer.cache = cache
-        }
+  func inject(into: AnyObject) {
+    if var consumer = into as? APIKeyConsumer {
+      consumer.apiKey = apiKey
     }
+
+    if var consumer = into as? NetworkFetchConsumer {
+      consumer.fetch = networkFetch
+    }
+
+    if var consumer = into as? ConfigurationConsumer {
+      consumer.configuration = configuration!
+    }
+
+    if var consumer = into as? ListCacheConsumer {
+      consumer.cache = cache
+    }
+  }
 }
 
 internal protocol APIKeyConsumer {
-    var apiKey: String! { get set }
+  var apiKey: String! { get set }
 }
 
 internal protocol NetworkFetchConsumer {
-    var fetch: NetworkFetch! { get set }
+  var fetch: NetworkFetch! { get set }
 }
 
 internal protocol ConfigurationConsumer {
-    var configuration: Configuration! { get set }
+  var configuration: Configuration! { get set }
 }

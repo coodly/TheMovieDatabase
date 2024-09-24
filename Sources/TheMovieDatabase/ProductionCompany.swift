@@ -17,24 +17,24 @@
 import Foundation
 
 public struct ProductionCompany: Codable {
-    public let id: Int
-    public let name: String
+  public let id: Int
+  public let name: String
     
-    static func loadFromData(_ data: [[String: AnyObject]]) -> [ProductionCompany] {
-        var result = [ProductionCompany]()
-        for company in data {
-            guard let name = company["name"] as? String else {
-                continue
-            }
+  static func loadFromData(_ data: [[String: AnyObject]]) -> [ProductionCompany] {
+    var result = [ProductionCompany]()
+    for company in data {
+      guard let name = company["name"] as? String else {
+        continue
+      }
             
-            guard let id = company["id"] as? Int else {
-                continue
-            }
+      guard let id = company["id"] as? Int else {
+        continue
+      }
             
-            let p = ProductionCompany(id: id, name: name)
-            result.append(p)
-        }
-        
-        return result
+      let p = ProductionCompany(id: id, name: name)
+      result.append(p)
     }
+        
+    return result
+  }
 }

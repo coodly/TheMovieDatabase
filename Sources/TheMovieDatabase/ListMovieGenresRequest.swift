@@ -19,20 +19,20 @@ import Foundation
 private let ListMovieGenresPath = "/genre/movie/list"
 
 internal struct GenresResponse: Codable {
-    let genres: [Genre]
+  let genres: [Genre]
 }
 
 internal class ListMovieGenresRequest: NetworkRequest<GenresResponse, [Genre]> {
-    private let language: String
-    internal init(language: String) {
-        self.language = language
-    }
-    
-    override func execute() {
-        GET(ListMovieGenresPath, parameters: ["api_key": apiKey as AnyObject, "language": language as AnyObject])
-    }
-    
-    override func handle(response: GenresResponse) {
-        resulthandler(response.genres, nil)
-    }
+  private let language: String
+  internal init(language: String) {
+    self.language = language
+  }
+
+  override func execute() {
+    GET(ListMovieGenresPath, parameters: ["api_key": apiKey as AnyObject, "language": language as AnyObject])
+  }
+
+  override func handle(response: GenresResponse) {
+    resulthandler(response.genres, nil)
+  }
 }

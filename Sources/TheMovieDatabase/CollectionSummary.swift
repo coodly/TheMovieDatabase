@@ -17,32 +17,32 @@
 import Foundation
 
 public struct CollectionSummary: Codable, Equatable {
-    public let id: Int
-    public let name: String
-    public var poster: Image? {
-        return Image(path: posterPath, config: config.posterConfig)
-    }
-    public var backdrop: Image? {
-        return Image(path: backdropPath, config: config.backdropConfig)
-    }
+  public let id: Int
+  public let name: String
+  public var poster: Image? {
+    return Image(path: posterPath, config: config.posterConfig)
+  }
+  public var backdrop: Image? {
+    return Image(path: backdropPath, config: config.backdropConfig)
+  }
 
-    private let posterPath: String?
-    private let backdropPath: String?
+  private let posterPath: String?
+  private let backdropPath: String?
     
-    private let config: Configuration
+  private let config: Configuration
     
-    public init(from decoder: Decoder) throws {
-        guard let config = decoder.userInfo[.configuration] as? Configuration else {
-            fatalError("Missing configuration or invalid configuration")
-        }
-        
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        
-        id = try values.decode(Int.self, forKey: .id)
-        name = try values.decode(String.self, forKey: .name)
-        posterPath = try? values.decode(String.self, forKey: .posterPath)
-        backdropPath = try? values.decode(String.self, forKey: .backdropPath)
-        
-        self.config = config
+  public init(from decoder: Decoder) throws {
+    guard let config = decoder.userInfo[.configuration] as? Configuration else {
+      fatalError("Missing configuration or invalid configuration")
     }
+        
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+    id = try values.decode(Int.self, forKey: .id)
+    name = try values.decode(String.self, forKey: .name)
+    posterPath = try? values.decode(String.self, forKey: .posterPath)
+    backdropPath = try? values.decode(String.self, forKey: .backdropPath)
+        
+    self.config = config
+  }
 }

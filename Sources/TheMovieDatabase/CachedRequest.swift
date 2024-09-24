@@ -17,5 +17,5 @@
 import Foundation
 
 internal protocol CachedRequest {
-    var cacheKey: String { get }
+  var cacheKey: String { get }
 }

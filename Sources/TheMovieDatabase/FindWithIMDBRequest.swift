@@ -19,23 +19,23 @@ import Foundation
 private let ByExternalIDPathBase = "/find/"
 
 internal struct FindResult: Codable {
-    let movieResults: [Movie]
+  let movieResults: [Movie]
 }
 
 internal class FindWithIMDBRequest: NetworkRequest<FindResult, Movie>, ConfigurationConsumer {
-    var configuration: Configuration!
-    
-    private let imdbID: String
-    internal init(imdbID: String) {
-        self.imdbID = imdbID
-    }
-    
-    override func execute() {
-        let path = "\(ByExternalIDPathBase)\(imdbID)"
-        GET(path, parameters: ["external_source": "imdb_id" as AnyObject, "api_key": apiKey as AnyObject])
-    }
-    
-    override func handle(response: FindResult) {
-        resulthandler(response.movieResults.first, nil)
-    }
+  var configuration: Configuration!
+
+  private let imdbID: String
+  internal init(imdbID: String) {
+    self.imdbID = imdbID
+  }
+
+  override func execute() {
+    let path = "\(ByExternalIDPathBase)\(imdbID)"
+    GET(path, parameters: ["external_source": "imdb_id" as AnyObject, "api_key": apiKey as AnyObject])
+  }
+
+  override func handle(response: FindResult) {
+    resulthandler(response.movieResults.first, nil)
+  }
 }

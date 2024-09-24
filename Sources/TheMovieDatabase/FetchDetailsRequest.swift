@@ -17,68 +17,68 @@
 import Foundation
 
 public struct Details: OptionSet {
-    public let rawValue : Int
-    let key: String
+  public let rawValue : Int
+  let key: String
     
-    public init(rawValue: Int, key: String) {
-        self.rawValue = rawValue
-        self.key = key
-    }
+  public init(rawValue: Int, key: String) {
+    self.rawValue = rawValue
+    self.key = key
+  }
     
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
-        self.key = ""
-    }
+  public init(rawValue: Int) {
+    self.rawValue = rawValue
+    self.key = ""
+  }
     
-    public static let credits = Details(rawValue: 1 << 0, key: "credits")
-    public static let similar = Details(rawValue: 1 << 1, key: "similar")
-    public static let reviews = Details(rawValue: 1 << 2, key: "reviews")
-    public static let translations = Details(rawValue: 1 << 3, key: "translations")
-    public static let videos = Details(rawValue: 1 << 4, key: "videos")
-    public static let images = Details(rawValue: 1 << 5, key: "images")
+  public static let credits = Details(rawValue: 1 << 0, key: "credits")
+  public static let similar = Details(rawValue: 1 << 1, key: "similar")
+  public static let reviews = Details(rawValue: 1 << 2, key: "reviews")
+  public static let translations = Details(rawValue: 1 << 3, key: "translations")
+  public static let videos = Details(rawValue: 1 << 4, key: "videos")
+  public static let images = Details(rawValue: 1 << 5, key: "images")
     
-    static let allValues: [Details] = [.credits, .similar, .reviews, .translations, .videos, .images]
+  static let allValues: [Details] = [.credits, .similar, .reviews, .translations, .videos, .images]
 }
 
 private let MovieDetailsPath = "/movie"
 
 class FetchDetailsRequest: NetworkRequest<Movie, Movie>, ConfigurationConsumer {
-    private let movieId: Int
-    private let include: Details
-    var configuration: Configuration!
+  private let movieId: Int
+  private let include: Details
+  var configuration: Configuration!
     
-    init(movieId: Int, includedDetails: Details) {
-        self.movieId = movieId
-        self.include = includedDetails
-    }
+  init(movieId: Int, includedDetails: Details) {
+    self.movieId = movieId
+    self.include = includedDetails
+  }
     
-    override func execute() {
-        let path = "\(MovieDetailsPath)/\(movieId)"
-        let append = appendForDetails(include)
+  override func execute() {
+    let path = "\(MovieDetailsPath)/\(movieId)"
+    let append = appendForDetails(include)
         
-        var params: [String: AnyObject] = ["api_key": apiKey as AnyObject]
-        if append.count > 0 {
-            params["append_to_response"] = append as AnyObject?
-        }
-        
-        GET(path, parameters: params)
+    var params: [String: AnyObject] = ["api_key": apiKey as AnyObject]
+    if append.count > 0 {
+      params["append_to_response"] = append as AnyObject?
     }
-    
-    override func handle(response: Movie) {
-        resulthandler(response, nil)
-    }
-    
-    private func appendForDetails(_ include: Details) -> String {
-        var append = [String]()
         
-        for check in Details.allValues {
-            guard include.contains(check) else {
-                continue
-            }
+    GET(path, parameters: params)
+  }
+    
+  override func handle(response: Movie) {
+    resulthandler(response, nil)
+  }
+    
+  private func appendForDetails(_ include: Details) -> String {
+    var append = [String]()
+        
+    for check in Details.allValues {
+      guard include.contains(check) else {
+        continue
+      }
             
-            append.append(check.key)
-        }
-        
-        return append.joined(separator: ",")
+      append.append(check.key)
     }
+        
+    return append.joined(separator: ",")
+  }
 }

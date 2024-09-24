@@ -17,61 +17,61 @@
 import Foundation
 
 private extension DateFormatter {
-    static let cacheDate: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter
-    }()
+  static let cacheDate: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    return formatter
+  }()
 }
 
 internal class ListCache {
-    func data(for list: String) -> Data? {
-        let listKey = key(for: list)
-        let cacheFileURL = ListCache.cacheFolder.appendingPathComponent(listKey)
-        do {
-            let data = try Data(contentsOf: cacheFileURL)
-            Logging.log("Cache hit for \(list)")
-            return data
-        } catch {
-            Logging.log("No cache hit for: \(list)")
-            return nil
-        }
+  func data(for list: String) -> Data? {
+    let listKey = key(for: list)
+    let cacheFileURL = ListCache.cacheFolder.appendingPathComponent(listKey)
+    do {
+      let data = try Data(contentsOf: cacheFileURL)
+      Logging.log("Cache hit for \(list)")
+      return data
+    } catch {
+      Logging.log("No cache hit for: \(list)")
+      return nil
+    }
+  }
+
+  func cache(_ data: Data, for list: String) {
+    let listKey = key(for: list)
+    let cacheFileURL = ListCache.cacheFolder.appendingPathComponent(listKey)
+    do {
+      if FileManager.default.fileExists(atPath: cacheFileURL.path) {
+        try FileManager.default.removeItem(at: cacheFileURL)
+      }
+    } catch {
+      Logging.log("Remove file error: \(error)")
     }
 
-    func cache(_ data: Data, for list: String) {
-        let listKey = key(for: list)
-        let cacheFileURL = ListCache.cacheFolder.appendingPathComponent(listKey)
-        do {
-            if FileManager.default.fileExists(atPath: cacheFileURL.path) {
-                try FileManager.default.removeItem(at: cacheFileURL)
-            }
-        } catch {
-            Logging.log("Remove file error: \(error)")
-        }
-
-        do {
-            try data.write(to: cacheFileURL)
-        } catch {
-            Logging.log("Write file error: \(error)")
-        }
+    do {
+      try data.write(to: cacheFileURL)
+    } catch {
+      Logging.log("Write file error: \(error)")
     }
+  }
 
-    private func key(for list: String) -> String {
-        let dateString = DateFormatter.cacheDate.string(from: Date())
-        return "\(dateString)-\(list).json"
+  private func key(for list: String) -> String {
+    let dateString = DateFormatter.cacheDate.string(from: Date())
+    return "\(dateString)-\(list).json"
+  }
+
+  private static var cacheFolder: URL = {
+    let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+    let last = urls.last!
+    let folderName = "org.themoviedb.www.cache"
+    let cacheFolder = last.appendingPathComponent(folderName)
+    Logging.log("Caches folder: \(cacheFolder)")
+    do {
+      try FileManager.default.createDirectory(at: cacheFolder, withIntermediateDirectories: true, attributes: nil)
+    } catch let error as NSError {
+      Logging.log("Create tmdb caches folder error \(error)")
     }
-
-    private static var cacheFolder: URL = {
-        let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
-        let last = urls.last!
-        let folderName = "org.themoviedb.www.cache"
-        let cacheFolder = last.appendingPathComponent(folderName)
-        Logging.log("Caches folder: \(cacheFolder)")
-        do {
-            try FileManager.default.createDirectory(at: cacheFolder, withIntermediateDirectories: true, attributes: nil)
-        } catch let error as NSError {
-            Logging.log("Create tmdb caches folder error \(error)")
-        }
-        return cacheFolder
-    }()
+    return cacheFolder
+  }()
 }

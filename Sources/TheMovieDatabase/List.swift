@@ -17,10 +17,10 @@
 import Foundation
 
 public enum List {
-    case popular
-    case topRated
-    case genre(Int)
-    case search(String)
-    case actor(Int)
-    case user(Int)
+  case popular
+  case topRated
+  case genre(Int)
+  case search(String)
+  case actor(Int)
+  case user(Int)
 }

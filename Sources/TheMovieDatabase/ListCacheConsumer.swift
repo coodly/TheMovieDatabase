@@ -17,5 +17,5 @@
 import Foundation
 
 internal protocol ListCacheConsumer {
-    var cache: ListCache! { get set }
+  var cache: ListCache! { get set }
 }

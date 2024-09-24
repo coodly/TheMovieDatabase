@@ -17,70 +17,70 @@
 import Foundation
 
 public struct Movie: Codable, Equatable {
-    public let id: Int
-    public let title: String
-    public let originalTitle: String?
-    public let overview: String?
-    public let voteAverage: Double
-    public let popularity: Double
-    private let posterPath: String?
-    private let backdropPath: String?
-    public let releaseDate: Date
-    public let runtime: Int
-    public var cast: [Actor]? {
-        return credits?.cast
-    }
-    public var similar: [Movie]?
-    public var posters: [Image]? {
-        return images?.posters.compactMap({ Image(path: $0.filePath, config: config.posterConfig) })
-    }
-    private let config: Configuration
-    public var collection: CollectionSummary? {
-        return belongsToCollection
-    }
-    public let genreIds: [Int]?
-    public let genres: [Genre]?
-    public let tagline: String?
+  public let id: Int
+  public let title: String
+  public let originalTitle: String?
+  public let overview: String?
+  public let voteAverage: Double
+  public let popularity: Double
+  private let posterPath: String?
+  private let backdropPath: String?
+  public let releaseDate: Date
+  public let runtime: Int
+  public var cast: [Actor]? {
+    return credits?.cast
+  }
+  public var similar: [Movie]?
+  public var posters: [Image]? {
+    return images?.posters.compactMap({ Image(path: $0.filePath, config: config.posterConfig) })
+  }
+  private let config: Configuration
+  public var collection: CollectionSummary? {
+    return belongsToCollection
+  }
+  public let genreIds: [Int]?
+  public let genres: [Genre]?
+  public let tagline: String?
     
-    public var rating: Double {
-        return voteAverage
-    }
-    public var poster: Image? {
-        return Image(path: posterPath, config: config.posterConfig)
-    }
-    public var backdrop: Image? {
-        return Image(path: backdropPath, config: config.backdropConfig)
-    }
-    private let credits: Credits?
-    private let belongsToCollection: CollectionSummary?
-    private let images: Images?
-    public let videos: [Video]?
+  public var rating: Double {
+    return voteAverage
+  }
+  public var poster: Image? {
+    return Image(path: posterPath, config: config.posterConfig)
+  }
+  public var backdrop: Image? {
+    return Image(path: backdropPath, config: config.backdropConfig)
+  }
+  private let credits: Credits?
+  private let belongsToCollection: CollectionSummary?
+  private let images: Images?
+  public let videos: [Video]?
     
-    public init(from decoder: Decoder) throws {
-        guard let config = decoder.userInfo[.configuration] as? Configuration else {
-            fatalError("Missing configuration or invalid configuration")
-        }
-        
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        
-        id = try values.decode(Int.self, forKey: .id)
-        title = try values.decode(String.self, forKey: .title)
-        originalTitle = try? values.decode(String.self, forKey: .originalTitle)
-        overview = try? values.decode(String.self, forKey: .overview)
-        voteAverage = (try? values.decode(Double.self, forKey: .voteAverage)) ?? 0.0
-        popularity = (try? values.decode(Double.self, forKey: .popularity)) ?? 0.0
-        posterPath = try? values.decode(String.self, forKey: .posterPath)
-        backdropPath = try? values.decode(String.self, forKey: .backdropPath)
-        releaseDate = (try? values.decode(Date.self, forKey: .releaseDate)) ?? Date.distantPast
-        self.config = config
-        credits = try? values.decode(Credits.self, forKey: .credits)
-        similar = (try? values.decode(MoviesPage.self, forKey: .similar))?.results
-        images = try? values.decode(Images.self, forKey: .images)
-        genreIds = try? values.decode([Int].self, forKey: .genreIds)
-        genres = try? values.decode([Genre].self, forKey: .genres)
-        tagline = try? values.decode(String.self, forKey: .tagline)
-        belongsToCollection = try? values.decode(CollectionSummary.self, forKey: .belongsToCollection)
-        videos = (try? values.decode(VideosPage.self, forKey: .videos))?.results
-        runtime = (try? values.decode(Int.self, forKey: .runtime)) ?? -1
+  public init(from decoder: Decoder) throws {
+    guard let config = decoder.userInfo[.configuration] as? Configuration else {
+      fatalError("Missing configuration or invalid configuration")
     }
+        
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+        
+    id = try values.decode(Int.self, forKey: .id)
+    title = try values.decode(String.self, forKey: .title)
+    originalTitle = try? values.decode(String.self, forKey: .originalTitle)
+    overview = try? values.decode(String.self, forKey: .overview)
+    voteAverage = (try? values.decode(Double.self, forKey: .voteAverage)) ?? 0.0
+    popularity = (try? values.decode(Double.self, forKey: .popularity)) ?? 0.0
+    posterPath = try? values.decode(String.self, forKey: .posterPath)
+    backdropPath = try? values.decode(String.self, forKey: .backdropPath)
+    releaseDate = (try? values.decode(Date.self, forKey: .releaseDate)) ?? Date.distantPast
+    self.config = config
+    credits = try? values.decode(Credits.self, forKey: .credits)
+    similar = (try? values.decode(MoviesPage.self, forKey: .similar))?.results
+    images = try? values.decode(Images.self, forKey: .images)
+    genreIds = try? values.decode([Int].self, forKey: .genreIds)
+    genres = try? values.decode([Genre].self, forKey: .genres)
+    tagline = try? values.decode(String.self, forKey: .tagline)
+    belongsToCollection = try? values.decode(CollectionSummary.self, forKey: .belongsToCollection)
+    videos = (try? values.decode(VideosPage.self, forKey: .videos))?.results
+    runtime = (try? values.decode(Int.self, forKey: .runtime)) ?? -1
+  }
 }

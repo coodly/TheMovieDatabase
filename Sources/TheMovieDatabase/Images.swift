@@ -17,10 +17,10 @@
 import Foundation
 
 internal struct Images: Codable, Equatable {
-    let backdrops: [RawImage]
-    let posters: [RawImage]
+  let backdrops: [RawImage]
+  let posters: [RawImage]
 }
 
 internal struct RawImage: Codable, Equatable {
-    let filePath: String
+  let filePath: String
 }

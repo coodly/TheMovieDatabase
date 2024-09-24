@@ -17,6 +17,6 @@
 import Foundation
 
 public struct Genre: Codable, Equatable {
-    public let id: Int
-    public let name: String
+  public let id: Int
+  public let name: String
 }

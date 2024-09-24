@@ -19,11 +19,11 @@ import Foundation
 private let ConfigurationsPath = "/configuration"
 
 class ConfigurationsRequest: NetworkRequest<Configuration, Configuration> {
-    override func execute() {
-        GET(ConfigurationsPath, parameters: ["api_key": apiKey as AnyObject])
-    }
-    
-    override func handle(response: Configuration) {
-        resulthandler(response, nil)
-    }
+  override func execute() {
+    GET(ConfigurationsPath, parameters: ["api_key": apiKey as AnyObject])
+  }
+
+  override func handle(response: Configuration) {
+    resulthandler(response, nil)
+  }
 }

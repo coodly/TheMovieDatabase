@@ -18,23 +18,23 @@ import XCTest
 @testable import TheMovieDatabase
 
 private class CaptureErrorRequest: NetworkRequest {
-    var error: Error?
-    
-    override func handle(error: Error?) {
-        self.error = error
-    }
+  var error: Error?
+
+  override func handle(error: Error?) {
+    self.error = error
+  }
 }
 
 class ErrorResponseTests: XCTestCase, JSONLoader {
-    func testHandleErrorJSON() {
-        let data = self.data(from: "error-code-34")
-        
-        let request = CaptureErrorRequest()
-        request.handleRaw(data: data, response: nil, error: nil)
-        
-        XCTAssertNotNil(request.error)
-        let error = request.error as! TMDBError
-        XCTAssertEqual(34, error.code)
-        XCTAssertEqual("The resource you requested could not be found.", error.message)
-    }
+  func testHandleErrorJSON() {
+    let data = self.data(from: "error-code-34")
+
+    let request = CaptureErrorRequest()
+    request.handleRaw(data: data, response: nil, error: nil)
+
+    XCTAssertNotNil(request.error)
+    let error = request.error as! TMDBError
+    XCTAssertEqual(34, error.code)
+    XCTAssertEqual("The resource you requested could not be found.", error.message)
+  }
 }
