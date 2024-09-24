@@ -61,7 +61,7 @@ internal class ListCache {
     return "\(dateString)-\(list).json"
   }
 
-  private static var cacheFolder: URL = {
+  private static let cacheFolder: URL = {
     let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
     let last = urls.last!
     let folderName = "org.themoviedb.www.cache"

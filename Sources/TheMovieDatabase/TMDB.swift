@@ -84,33 +84,45 @@ extension TMDB {
 // MARK: -
 // MARK: Lists
 extension TMDB {
-  public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc), completion: @escaping TMDBCompletionClosure) {
-    let request: NetworkRequest<MoviesPage, Cursor<Movie>>
-    switch list {
-    case .topRated:
-      request = ListTopMoviesRequest(page: page)
-    case .popular:
-      request = ListPopularMoviesRequest(page: page)
-    case .genre(let genreId):
-      request = MoviesDiscoverRequest(genreId: genreId, page: page, sort: sort)
-    case .search(let term):
-      guard !term.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty else {
-        completion(nil, nil)
+  public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc)) async throws -> Cursor<Movie>? {
+    try await withCheckedThrowingContinuation {
+      continuation in
+      
+      let completion: (Cursor<Movie>?, Error?) -> () = { cursor, error in
+        if let error {
+          continuation.resume(throwing: error)
+        } else {
+          continuation.resume(returning: cursor)
+        }
+      }
+      
+      let request: NetworkRequest<MoviesPage, Cursor<Movie>>
+      switch list {
+      case .topRated:
+        request = ListTopMoviesRequest(page: page)
+      case .popular:
+        request = ListPopularMoviesRequest(page: page)
+      case .genre(let genreId):
+        request = MoviesDiscoverRequest(genreId: genreId, page: page, sort: sort)
+      case .search(let term):
+        guard !term.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty else {
+          continuation.resume(returning: nil)
+          return
+        }
+        request = SearchMoviesRequest(page: page, term: term)
+      case .actor(let actorId):
+        request = MoviesDiscoverRequest(actorId: actorId, page: page, sort: sort)
+      case .user(let listId):
+        let request = ListMoviesInUserList(listId: listId)
+        request.resulthandler = completion
+        runWithConfigCheck(request: request)
         return
       }
-      request = SearchMoviesRequest(page: page, term: term)
-    case .actor(let actorId):
-      request = MoviesDiscoverRequest(actorId: actorId, page: page, sort: sort)
-    case .user(let listId):
-      let request = ListMoviesInUserList(listId: listId)
+
       request.resulthandler = completion
+
       runWithConfigCheck(request: request)
-      return
     }
-
-    request.resulthandler = completion
-
-    runWithConfigCheck(request: request)
   }
 }
 

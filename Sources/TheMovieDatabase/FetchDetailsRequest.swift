@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Details: OptionSet {
+public struct Details: OptionSet, Sendable {
   public let rawValue : Int
   let key: String
     

@@ -60,11 +60,11 @@ internal struct CachedConfiguration: Codable {
     }
   }
     
-  private static var configFilePath: URL = {
+  private static let configFilePath: URL = {
     return workingFilesDirectory.appendingPathComponent("Configuration.json")
   }()
     
-  private static var workingFilesDirectory: URL = {
+  private static let workingFilesDirectory: URL = {
     let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
     let last = urls.last!
     let identifier = Bundle.main.bundleIdentifier ?? "org.themoviedb.www"
