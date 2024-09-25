@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import TMDBLogging
 
 private let MoviesPerPage = 20
 
@@ -57,7 +58,7 @@ public class Cursor<T> {
     return page < totalPages
   }
     
-  convenience init(page: Int, totalPages: Int, items: [T]) {
+  package convenience init(page: Int, totalPages: Int, items: [T]) {
     self.init()
         
     self.page = page

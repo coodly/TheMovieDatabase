@@ -15,18 +15,9 @@
  */
 
 import Foundation
+import TMDBModel
 
 private let ListMoviesPath = "/movie/popular"
-
-internal struct MoviesPage: Codable {
-  let page: Int
-  let totalPages: Int
-  let results: [Movie]
-
-  internal var cursor: Cursor<Movie> {
-    return Cursor<Movie>(page: page, totalPages: totalPages, items: results)
-  }
-}
 
 internal class ListPopularMoviesRequest: NetworkRequest<MoviesPage, Cursor<Movie>>, ConfigurationConsumer, CachedRequest {
   private var page: Int

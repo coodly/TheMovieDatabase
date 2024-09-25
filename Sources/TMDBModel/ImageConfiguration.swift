@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Genre: Codable, Equatable {
-  public let id: Int
-  public let name: String
+package struct ImageConfiguration: Codable, Equatable {
+  let baseURL: URL
+  let sizes: [String]
 }

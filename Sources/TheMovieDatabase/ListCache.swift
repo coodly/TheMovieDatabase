@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import TMDBLogging
 
 private extension DateFormatter {
   static let cacheDate: DateFormatter = {

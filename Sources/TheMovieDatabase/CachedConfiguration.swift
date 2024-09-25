@@ -15,6 +15,8 @@
  */
 
 import Foundation
+import TMDBLogging
+import TMDBModel
 
 private let ConfigInvalidationTimeSecods = TimeInterval(60 * 60 * 24 * 3)
 

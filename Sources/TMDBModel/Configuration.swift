@@ -16,14 +16,14 @@
 
 import Foundation
 
-struct Configuration: Codable, Equatable {
+package struct Configuration: Codable, Equatable {
   let images: ImagesConfig
 
   var backdropConfig: ImageConfiguration {
     return ImageConfiguration(baseURL: images.secureBaseUrl, sizes: images.backdropSizes)
   }
 
-  var posterConfig: ImageConfiguration {
+  package var posterConfig: ImageConfiguration {
     return ImageConfiguration(baseURL: images.secureBaseUrl, sizes: images.posterSizes)
   }
 

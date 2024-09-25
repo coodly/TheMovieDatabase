@@ -15,6 +15,7 @@
  */
 
 import Foundation
+import TMDBModel
 
 internal protocol InjectionHandler {
   func inject(into: AnyObject)

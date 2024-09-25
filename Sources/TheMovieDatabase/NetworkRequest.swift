@@ -18,10 +18,7 @@ import Foundation
 #if canImport(FoundationNetworking)
   import FoundationNetworking
 #endif
-
-extension CodingUserInfoKey {
-  internal static let configuration = CodingUserInfoKey(rawValue: "configuration")!
-}
+import TMDBLogging
 
 private let APIServer = "https://api.themoviedb.org/3"
 

@@ -15,10 +15,16 @@
  */
 
 import Foundation
+import TMDBLogging
 
-public struct Image: Codable, Equatable {
+public struct Image: Codable, Equatable, Sendable {
   public let path: String?
   internal let config: ImageConfiguration?
+  
+  package init(path: String?, config: ImageConfiguration?) {
+    self.path = path
+    self.config = config
+  }
     
   public func url(for size: String = "original") -> URL? {
     guard let path = path, let config = config else {

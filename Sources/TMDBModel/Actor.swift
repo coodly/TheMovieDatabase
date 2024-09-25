@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Coodly LLC
+ * Copyright 2016 Coodly LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,27 @@
 
 import Foundation
 
-public struct CollectionSummary: Codable, Equatable {
+public struct Actor: Codable, Equatable, Sendable {
   public let id: Int
   public let name: String
-  public var poster: Image? {
-    return Image(path: posterPath, config: config.posterConfig)
+  public var profile: Image? {
+    return Image(path: profilePath, config: config.profileConfig)
   }
-  public var backdrop: Image? {
-    return Image(path: backdropPath, config: config.backdropConfig)
-  }
-
-  private let posterPath: String?
-  private let backdropPath: String?
-    
+  private let profilePath: String?
   private let config: Configuration
-    
+  public let character: String
+
   public init(from decoder: Decoder) throws {
     guard let config = decoder.userInfo[.configuration] as? Configuration else {
       fatalError("Missing configuration or invalid configuration")
     }
-        
+
     let values = try decoder.container(keyedBy: CodingKeys.self)
-        
+
     id = try values.decode(Int.self, forKey: .id)
     name = try values.decode(String.self, forKey: .name)
-    posterPath = try? values.decode(String.self, forKey: .posterPath)
-    backdropPath = try? values.decode(String.self, forKey: .backdropPath)
-        
+    profilePath = try? values.decode(String.self, forKey: .profilePath)
+    character = try values.decode(String.self, forKey: .character)
     self.config = config
   }
 }

@@ -15,6 +15,8 @@
  */
 
 import Foundation
+import TMDBLogging
+import TMDBModel
 
 public typealias TMDBCompletionClosure = ((Cursor<Movie>?, Error?) -> ())
 

@@ -16,11 +16,11 @@
 
 import Foundation
 
-public struct Movie: Codable, Equatable {
+public struct Movie: Codable, Equatable, Sendable, Identifiable {
   public let id: Int
   public let title: String
   public let originalTitle: String?
-  public let overview: String?
+  public let overview: String
   public let voteAverage: Double
   public let popularity: Double
   private let posterPath: String?
@@ -66,7 +66,7 @@ public struct Movie: Codable, Equatable {
     id = try values.decode(Int.self, forKey: .id)
     title = try values.decode(String.self, forKey: .title)
     originalTitle = try? values.decode(String.self, forKey: .originalTitle)
-    overview = try? values.decode(String.self, forKey: .overview)
+    overview = (try? values.decode(String.self, forKey: .overview)) ?? ""
     voteAverage = (try? values.decode(Double.self, forKey: .voteAverage)) ?? 0.0
     popularity = (try? values.decode(Double.self, forKey: .popularity)) ?? 0.0
     posterPath = try? values.decode(String.self, forKey: .posterPath)
