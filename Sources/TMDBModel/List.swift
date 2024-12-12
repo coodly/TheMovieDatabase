@@ -16,7 +16,7 @@
 
 import Foundation
 
-public enum List {
+public enum List: Sendable {
   case popular
   case topRated
   case genre(Int)
