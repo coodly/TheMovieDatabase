@@ -81,10 +81,12 @@ public struct TMDB: Sendable {
     
     let (data, result) = try await fetch.fetch(request: request as URLRequest)
     
+#if DEBUG
     if let string = String(data: data, encoding: .utf8) {
       Logging.log(string)
     }
-
+#endif
+    
     @Shared(.configuration) var configuration
 
     let formatter = DateFormatter()
@@ -99,7 +101,7 @@ public struct TMDB: Sendable {
     }
 
     do {
-      return try await decoder.decode(Result.self, from: data)
+      return try decoder.decode(Result.self, from: data)
     } catch {
       if let failure = try? decoder.decode(TMDBError.self, from: data) {
         throw failure
