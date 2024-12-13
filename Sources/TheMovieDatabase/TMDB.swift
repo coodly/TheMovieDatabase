@@ -98,7 +98,15 @@ public struct TMDB: Sendable {
       decoder.userInfo[.configuration] = configuration
     }
 
-    return try await decoder.decode(Result.self, from: data)
+    do {
+      return try await decoder.decode(Result.self, from: data)
+    } catch {
+      if let failure = try? decoder.decode(TMDBError.self, from: data) {
+        throw failure
+      } else {
+        throw error
+      }
+    }
   }
   
   
