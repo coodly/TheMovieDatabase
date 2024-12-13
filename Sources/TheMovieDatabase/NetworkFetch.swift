@@ -19,16 +19,14 @@ import Foundation
   import FoundationNetworking
 #endif
 
-public typealias NetworkFetchClosure = (Data?, URLResponse?, Error?) -> ()
+public struct NetworkFetch: Sendable {
+  private let onPerformFetch: @Sendable (URLRequest) async throws -> (Data, URLResponse)
 
-public struct NetworkFetch {
-  private let onPerformFetch: ((URLRequest, @escaping NetworkFetchClosure) -> Void)
-
-  public init(onPerformFetch: @escaping ((URLRequest, @escaping NetworkFetchClosure) -> Void)) {
+  public init(onPerformFetch: @escaping @Sendable (URLRequest) async throws -> (Data, URLResponse)) {
     self.onPerformFetch = onPerformFetch
   }
 
-  func fetch(request: URLRequest, completion: @escaping NetworkFetchClosure) {
-    onPerformFetch(request, completion)
+  func fetch(request: URLRequest) async throws -> (Data, URLResponse) {
+    try await onPerformFetch(request)
   }
 }

@@ -1,7 +1,7 @@
-package struct MoviesPage: Codable {
-  let page: Int
-  let totalPages: Int
-  let results: [Movie]
+public struct MoviesPage: Codable {
+  public let page: Int
+  public let totalPages: Int
+  public let results: [Movie]
 
   package var cursor: Cursor<Movie> {
     return Cursor<Movie>(page: page, totalPages: totalPages, items: results)

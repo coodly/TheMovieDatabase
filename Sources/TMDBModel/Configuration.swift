@@ -15,8 +15,9 @@
  */
 
 import Foundation
+import Sharing
 
-package struct Configuration: Codable, Equatable {
+package struct Configuration: Codable, Equatable, Sendable {
   let images: ImagesConfig
 
   var backdropConfig: ImageConfiguration {
@@ -32,10 +33,16 @@ package struct Configuration: Codable, Equatable {
   }
 }
 
-struct ImagesConfig: Codable, Equatable {
+struct ImagesConfig: Codable, Equatable, Sendable {
   let baseUrl: URL
   let secureBaseUrl: URL
   let backdropSizes: [String]
   let posterSizes: [String]
   let profileSizes: [String]
+}
+
+package extension SharedReaderKey where Self == InMemoryKey<Configuration?>.Default {
+  static var configuration: Self {
+    Self[.inMemory("com.coodly.tmdb-configuration"), default: nil]
+  }
 }

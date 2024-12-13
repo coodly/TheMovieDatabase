@@ -3,24 +3,27 @@
 
 import PackageDescription
 
+private let sharing = Target.Dependency.product(name: "Sharing", package: "swift-sharing")
+
 let package = Package(
   name: "TheMovieDatabase",
-  platforms: [.iOS(.v13), .tvOS(.v13)],
+  platforms: [.iOS(.v13), .tvOS(.v13), .macOS(.v14)],
   products: [
     .library(name: "TheMovieDatabase", targets: ["TheMovieDatabase"]),
     .library(name: "TMDBLogging", targets: ["TMDBLogging"]),
     .library(name: "TMDBModel", targets: ["TMDBModel"])
   ],
   dependencies: [
-    // Dependencies declare other packages that this package depends on.
-    // .package(url: /* package url */, from: "1.0.0"),
+    .package(url: "https://github.com/pointfreeco/swift-sharing.git", exact: "1.0.2")
   ],
   targets: [
     .target(
       name: "TheMovieDatabase",
       dependencies: [
         "TMDBLogging",
-        "TMDBModel"
+        "TMDBModel",
+        
+        sharing
       ],
       swiftSettings: [.swiftLanguageMode(.v5)]
     ),
@@ -31,7 +34,9 @@ let package = Package(
     .target(
       name: "TMDBModel",
       dependencies: [
-        "TMDBLogging"
+        "TMDBLogging",
+        
+        sharing
       ]
     ),
     .testTarget(

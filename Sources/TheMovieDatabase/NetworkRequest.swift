@@ -116,7 +116,8 @@ internal class NetworkRequest<Response: Codable, Result>:  NetworkFetchConsumer,
     let request = NSMutableURLRequest(url: requestURL)
     request.httpMethod = method.rawValue
         
-    fetch.fetch(request: request as URLRequest, completion: handleRaw)
+    fatalError()
+    //fetch.fetch(request: request as URLRequest, completion: handleRaw)
   }
     
   func handleRaw(data: Data?, response: URLResponse?, error: Error?) {

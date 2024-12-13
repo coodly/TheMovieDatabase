@@ -15,188 +15,292 @@
  */
 
 import Foundation
+import Sharing
 import TMDBLogging
 import TMDBModel
 
-public typealias TMDBCompletionClosure = ((Cursor<Movie>?, Error?) -> ())
-
-public class TMDB: InjectionHandler {
+public struct TMDB: Sendable {
+  private let apiKey: String
+  private let fetch: NetworkFetch
+  
   public init(apiKey: String, networkFetch: NetworkFetch) {
-    Injector.sharedInsatnce.apiKey = apiKey
-    Injector.sharedInsatnce.networkFetch = networkFetch
+    self.apiKey = apiKey
+    self.fetch = networkFetch
+  }
+    
+  public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc)) async throws -> MoviesPage {
+    let path: String
+    switch list {
+    case .popular:
+      path = "/movie/popular"
+    case .topRated:
+      fatalError()
+    case .genre(let int):
+      fatalError()
+    case .search(let string):
+      fatalError()
+    case .actor(let int):
+      fatalError()
+    case .user(let int):
+      fatalError()
+    }
+
+    return try await get(path: path, params: ["page": String(describing: page)])
   }
 
-  fileprivate func runWithConfigCheck<Response: Codable, Result>(request: NetworkRequest<Response, Result>) {
-    let injectAndRunClosure = {
-      self.inject(into: request)
-      request.execute()
-    }
+  @Sendable
+  func perform<Result: Decodable>(_ method: HTTPMethod, path: String, parameters: [String: String]) async throws -> Result {
+    let APIServer = "https://api.themoviedb.org/3"
+    var components = URLComponents(url: URL(string: APIServer)!, resolvingAgainstBaseURL: true)!
+    components.path = components.path + path
+        
+    Logging.log("Perform \(method.rawValue) to \(components.url!)")
 
-    if Injector.sharedInsatnce.configuration != nil {
-      injectAndRunClosure()
-      return
-    }
-
-    let configRequest = ConfigurationsRequest()
-    inject(into: configRequest)
-    configRequest.resulthandler = {
-      result, error in
-
-      if let error = error {
-        request.handle(error: error)
-        return
+    var queryItems = [URLQueryItem]()
+          
+    for (name, value) in parameters {
+      var encode: String?
+      if let integer = value as? Int {
+        encode = String(integer)
+      } else if let string = value as? String {
+        encode = string
       }
-
-      if let config = result {
-        Injector.sharedInsatnce.configuration = config
-        let cached = CachedConfiguration(configuration: config, time: Date())
-        cached.write()
+              
+      guard let toEncode = encode else {
+        continue
       }
-
-      injectAndRunClosure()
+              
+      queryItems.append(URLQueryItem(name: name, value: toEncode))
     }
-    configRequest.execute()
-  }
-}
+          
+    components.queryItems = queryItems
 
-// MARK: - 
-// MARK: Movie details
-extension TMDB {
-  public func detailsFor(movie: Movie, inclidedDetails details: Details = []) async throws -> Movie {
-    Logging.log("Fetch details for movie:\(movie)")
-    return try await detailsFor(movieId: movie.id, inclidedDetails: details)
-  }
-
-  public func detailsFor(movieId: Int, inclidedDetails details: Details = []) async throws -> Movie {
-    Logging.log("Fetch details for movieId:\(movieId)")
-    return try await withCheckedThrowingContinuation { continuation in
-      let request = FetchDetailsRequest(movieId: movieId, includedDetails: details)
-      request.resulthandler = {
-        movie, error in
-
-        if let movie = movie {
-          continuation.resume(returning: movie)
-        } else {
-          continuation.resume(throwing: error ?? TMDBError.unknown)
-        }
-      }
-      runWithConfigCheck(request: request)
+    let requestURL = components.url!
+    let request = NSMutableURLRequest(url: requestURL)
+    request.httpMethod = method.rawValue
+    
+    let (data, result) = try await fetch.fetch(request: request as URLRequest)
+    
+    if let string = String(data: data, encoding: .utf8) {
+      Logging.log(string)
     }
-  }
-}
 
-// MARK: -
-// MARK: Lists
-extension TMDB {
-  public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc)) async throws -> Cursor<Movie>? {
-    try await withCheckedThrowingContinuation {
-      continuation in
-      
-      let completion: (Cursor<Movie>?, Error?) -> () = { cursor, error in
-        if let error {
-          continuation.resume(throwing: error)
-        } else {
-          continuation.resume(returning: cursor)
-        }
-      }
-      
-      let request: NetworkRequest<MoviesPage, Cursor<Movie>>
-      switch list {
-      case .topRated:
-        request = ListTopMoviesRequest(page: page)
-      case .popular:
-        request = ListPopularMoviesRequest(page: page)
-      case .genre(let genreId):
-        request = MoviesDiscoverRequest(genreId: genreId, page: page, sort: sort)
-      case .search(let term):
-        guard !term.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty else {
-          continuation.resume(returning: nil)
-          return
-        }
-        request = SearchMoviesRequest(page: page, term: term)
-      case .actor(let actorId):
-        request = MoviesDiscoverRequest(actorId: actorId, page: page, sort: sort)
-      case .user(let listId):
-        let request = ListMoviesInUserList(listId: listId)
-        request.resulthandler = completion
-        runWithConfigCheck(request: request)
-        return
-      }
+    @Shared(.configuration) var configuration
 
-      request.resulthandler = completion
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
 
-      runWithConfigCheck(request: request)
+    let decoder = JSONDecoder()
+        
+    decoder.dateDecodingStrategy = .formatted(formatter)
+    decoder.keyDecodingStrategy = .convertFromSnakeCase
+    if let configuration {
+      decoder.userInfo[.configuration] = configuration
     }
+
+    return try await decoder.decode(Result.self, from: data)
   }
-}
-
-// MARK: -
-// MARK: By external ID
-extension TMDB {
-  public func findWithIMDB(id: String, completion: @escaping ((Movie?, Error?) -> Void)) {
-    let request = FindWithIMDBRequest(imdbID: id)
-    request.resulthandler = completion
-    runWithConfigCheck(request: request)
+  
+  
+  @Sendable
+  func fetchConfigutation() async throws -> Configuration {
+    try await perform(.get, path: "/configuration", parameters: ["api_key": apiKey])
   }
-}
-
-// MARK: -
-// MARK: Collections
-public typealias TMDBCollectionClosure = ((Collection?) -> ())
-extension TMDB {
-  public func fetch(collection id: Int, completion: @escaping TMDBCollectionClosure) {
-    let request = CollectionDetailsRequest(collectionId: id)
-    request.resulthandler = {
-      result, error in
-
-      completion(result)
+  
+  @Sendable
+  func get<Result: Decodable>(path: String, params: [String: String]) async throws -> Result {
+    @Shared(.configuration) var configuration
+    if configuration == nil {
+      let loaded = try await fetchConfigutation()
+      print(loaded)
+      $configuration.withLock { $0 = loaded }
     }
-    runWithConfigCheck(request: request)
+    
+    var paramsSent = params
+    paramsSent["api_key"] = apiKey
+    return try await perform(.get, path: path, parameters: paramsSent)
   }
 }
 
-// MARK: -
-// MARK: Movie genres list
-extension TMDB {
-  public func listMovieGenres(in language: String = "en") async throws -> [Genre] {
-    try await withCheckedThrowingContinuation { continuation in
-      let request = ListMovieGenresRequest(language: language)
-      inject(into: request)
-      request.resulthandler = {
-        result, error in
-
-        if let error {
-          continuation.resume(throwing: error)
-        } else {
-          continuation.resume(returning: result ?? [])
-        }
-      }
-      request.execute()
-    }
-  }
-}
-
-extension TMDB {
-  public func poster(with path: String?) -> Image {
-    return Image(path: path, config: Injector.sharedInsatnce.configuration?.posterConfig)
-  }
-}
-
-// MARK: -
-// MARK: Supported languages
-extension TMDB {
-  public func listLanguages(completion: @escaping ((Result<[Language], Error>) -> Void)) {
-    let request = ListLanguagesRequest()
-    inject(into: request)
-    request.resulthandler = {
-      languages, error in
-
-      if let error = error {
-        completion(.failure(error))
-      } else {
-        completion(.success(languages ?? []))
-      }
-    }
-    request.execute()
-  }
-}
+//public typealias TMDBCompletionClosure = ((Cursor<Movie>?, Error?) -> ())
+//
+//public class TMDB: InjectionHandler {
+//  public init(apiKey: String, networkFetch: NetworkFetch) {
+//    Injector.sharedInsatnce.apiKey = apiKey
+//    Injector.sharedInsatnce.networkFetch = networkFetch
+//  }
+//
+//  fileprivate func runWithConfigCheck<Response: Codable, Result>(request: NetworkRequest<Response, Result>) {
+//    let injectAndRunClosure = {
+//      self.inject(into: request)
+//      request.execute()
+//    }
+//
+//    if Injector.sharedInsatnce.configuration != nil {
+//      injectAndRunClosure()
+//      return
+//    }
+//
+//    let configRequest = ConfigurationsRequest()
+//    inject(into: configRequest)
+//    configRequest.resulthandler = {
+//      result, error in
+//
+//      if let error = error {
+//        request.handle(error: error)
+//        return
+//      }
+//
+//      if let config = result {
+//        Injector.sharedInsatnce.configuration = config
+//        let cached = CachedConfiguration(configuration: config, time: Date())
+//        cached.write()
+//      }
+//
+//      injectAndRunClosure()
+//    }
+//    configRequest.execute()
+//  }
+//}
+//
+//// MARK: - 
+//// MARK: Movie details
+//extension TMDB {
+//  public func detailsFor(movie: Movie, inclidedDetails details: Details = []) async throws -> Movie {
+//    Logging.log("Fetch details for movie:\(movie)")
+//    return try await detailsFor(movieId: movie.id, inclidedDetails: details)
+//  }
+//
+//  public func detailsFor(movieId: Int, inclidedDetails details: Details = []) async throws -> Movie {
+//    Logging.log("Fetch details for movieId:\(movieId)")
+//    return try await withCheckedThrowingContinuation { continuation in
+//      let request = FetchDetailsRequest(movieId: movieId, includedDetails: details)
+//      request.resulthandler = {
+//        movie, error in
+//
+//        if let movie = movie {
+//          continuation.resume(returning: movie)
+//        } else {
+//          continuation.resume(throwing: error ?? TMDBError.unknown)
+//        }
+//      }
+//      runWithConfigCheck(request: request)
+//    }
+//  }
+//}
+//
+//// MARK: -
+//// MARK: Lists
+//extension TMDB {
+//  public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc)) async throws -> Cursor<Movie>? {
+//    try await withCheckedThrowingContinuation {
+//      continuation in
+//      
+//      let completion: (Cursor<Movie>?, Error?) -> () = { cursor, error in
+//        if let error {
+//          continuation.resume(throwing: error)
+//        } else {
+//          continuation.resume(returning: cursor)
+//        }
+//      }
+//      
+//      let request: NetworkRequest<MoviesPage, Cursor<Movie>>
+//      switch list {
+//      case .topRated:
+//        request = ListTopMoviesRequest(page: page)
+//      case .popular:
+//        request = ListPopularMoviesRequest(page: page)
+//      case .genre(let genreId):
+//        request = MoviesDiscoverRequest(genreId: genreId, page: page, sort: sort)
+//      case .search(let term):
+//        guard !term.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty else {
+//          continuation.resume(returning: nil)
+//          return
+//        }
+//        request = SearchMoviesRequest(page: page, term: term)
+//      case .actor(let actorId):
+//        request = MoviesDiscoverRequest(actorId: actorId, page: page, sort: sort)
+//      case .user(let listId):
+//        let request = ListMoviesInUserList(listId: listId)
+//        request.resulthandler = completion
+//        runWithConfigCheck(request: request)
+//        return
+//      }
+//
+//      request.resulthandler = completion
+//
+//      runWithConfigCheck(request: request)
+//    }
+//  }
+//}
+//
+//// MARK: -
+//// MARK: By external ID
+//extension TMDB {
+//  public func findWithIMDB(id: String, completion: @escaping ((Movie?, Error?) -> Void)) {
+//    let request = FindWithIMDBRequest(imdbID: id)
+//    request.resulthandler = completion
+//    runWithConfigCheck(request: request)
+//  }
+//}
+//
+//// MARK: -
+//// MARK: Collections
+//public typealias TMDBCollectionClosure = ((Collection?) -> ())
+//extension TMDB {
+//  public func fetch(collection id: Int, completion: @escaping TMDBCollectionClosure) {
+//    let request = CollectionDetailsRequest(collectionId: id)
+//    request.resulthandler = {
+//      result, error in
+//
+//      completion(result)
+//    }
+//    runWithConfigCheck(request: request)
+//  }
+//}
+//
+//// MARK: -
+//// MARK: Movie genres list
+//extension TMDB {
+//  public func listMovieGenres(in language: String = "en") async throws -> [Genre] {
+//    try await withCheckedThrowingContinuation { continuation in
+//      let request = ListMovieGenresRequest(language: language)
+//      inject(into: request)
+//      request.resulthandler = {
+//        result, error in
+//
+//        if let error {
+//          continuation.resume(throwing: error)
+//        } else {
+//          continuation.resume(returning: result ?? [])
+//        }
+//      }
+//      request.execute()
+//    }
+//  }
+//}
+//
+//extension TMDB {
+//  public func poster(with path: String?) -> Image {
+//    return Image(path: path, config: Injector.sharedInsatnce.configuration?.posterConfig)
+//  }
+//}
+//
+//// MARK: -
+//// MARK: Supported languages
+//extension TMDB {
+//  public func listLanguages(completion: @escaping ((Result<[Language], Error>) -> Void)) {
+//    let request = ListLanguagesRequest()
+//    inject(into: request)
+//    request.resulthandler = {
+//      languages, error in
+//
+//      if let error = error {
+//        completion(.failure(error))
+//      } else {
+//        completion(.success(languages ?? []))
+//      }
+//    }
+//    request.execute()
+//  }
+//}

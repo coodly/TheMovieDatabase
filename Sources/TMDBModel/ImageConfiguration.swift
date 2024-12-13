@@ -16,7 +16,7 @@
 
 import Foundation
 
-package struct ImageConfiguration: Codable, Equatable {
+package struct ImageConfiguration: Codable, Equatable, Sendable {
   let baseURL: URL
   let sizes: [String]
 }
