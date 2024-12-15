@@ -132,6 +132,87 @@ public struct TMDB: Sendable {
   }
 }
 
+extension TMDB {
+  public func poster(with path: String?) -> Image {
+    @Shared(.configuration) var configuration
+
+    return Image(path: path, config: configuration?.posterConfig)
+  }
+}
+
+extension TMDB {
+  public func listMovieGenres(in language: String = "en") async throws -> [Genre] {
+    fatalError()
+    
+    //try await withCheckedThrowingContinuation { continuation in
+    //  let request = ListMovieGenresRequest(language: language)
+    //  inject(into: request)
+    //  request.resulthandler = {
+    //    result, error in
+
+    //    if let error {
+    //      continuation.resume(throwing: error)
+    //    } else {
+    //      continuation.resume(returning: result ?? [])
+    //    }
+    //  }
+    //  request.execute()
+    //}
+  }
+}
+
+extension TMDB {
+  public func detailsFor(movie: Movie, inclidedDetails details: Details = []) async throws -> Movie {
+    Logging.log("Fetch details for movie:\(movie)")
+    return try await detailsFor(movieId: movie.id, inclidedDetails: details)
+  }
+
+  public func detailsFor(movieId: Int, inclidedDetails details: Details = []) async throws -> Movie {
+    Logging.log("Fetch details for movieId:\(movieId)")
+    
+    func appendForDetails(_ include: Details) -> String {
+      var append = [String]()
+          
+      for check in Details.allValues {
+        guard include.contains(check) else {
+          continue
+        }
+              
+        append.append(check.key)
+      }
+          
+      return append.joined(separator: ",")
+    }
+    
+    let MovieDetailsPath = "/movie"
+    let path = "\(MovieDetailsPath)/\(movieId)"
+    let append = appendForDetails(details)
+    
+    var params: [String: String] = [:]
+    if append.count > 0 {
+      params["append_to_response"] = append
+    }
+
+    
+    return try await get(path: path, params: params)
+    
+    //return try await withCheckedThrowingContinuation { continuation in
+    //  let request = FetchDetailsRequest(movieId: movieId, includedDetails: details)
+    //  request.resulthandler = {
+    //    movie, error in
+
+    //    if let movie = movie {
+    //      continuation.resume(returning: movie)
+    //    } else {
+    //      continuation.resume(throwing: error ?? TMDBError.unknown)
+    //    }
+    //  }
+    //  runWithConfigCheck(request: request)
+    //}
+  }
+}
+
+
 //public typealias TMDBCompletionClosure = ((Cursor<Movie>?, Error?) -> ())
 //
 //public class TMDB: InjectionHandler {
