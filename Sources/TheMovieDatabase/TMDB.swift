@@ -212,6 +212,15 @@ extension TMDB {
   }
 }
 
+extension TMDB {
+  public func findWithIMDB(id: String) async throws -> Movie? {
+    let ByExternalIDPathBase = "/find/"
+    let path = "\(ByExternalIDPathBase)\(id)"
+    let result: FindResult = try await get(path: path, params: ["external_source": "imdb_id"])
+    return result.movieResults.first
+  }
+}
+
 
 //public typealias TMDBCompletionClosure = ((Cursor<Movie>?, Error?) -> ())
 //
