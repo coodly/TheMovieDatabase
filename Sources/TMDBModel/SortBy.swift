@@ -27,3 +27,18 @@ public enum SortBy {
   case popularity(SortDirection)
   case releaseDate(SortDirection)
 }
+
+package extension SortBy {
+  var value: String {
+    switch self {
+    case .none:
+      return ""
+    case .rating(let direction):
+      return "vote_average.\(direction.rawValue)"
+    case .popularity(let direction):
+      return "popularity.\(direction.rawValue)"
+    case .releaseDate(let direction):
+      return "release_date.\(direction.rawValue)"
+    }
+  }
+}

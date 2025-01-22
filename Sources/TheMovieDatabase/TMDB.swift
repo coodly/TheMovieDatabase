@@ -35,9 +35,21 @@ public struct TMDB: Sendable {
     case .popular:
       path = "/movie/popular"
     case .topRated:
-      fatalError()
+      path = "/movie/top_rated"
     case .genre(let int):
-      fatalError()
+      path = "/discover/movie"
+      params["with_genres"] = String(describing: int)
+      params["include_adult"] = "false"
+      params["include_video"] = "true"
+      params["vote_count.gte"] = "50"
+      
+      switch sort {
+      case .none:
+        break // no op
+      default:
+        params["sort_by"] = sort.value
+      }
+        
     case .search(let string):
       path = "/search/movie"
       params["query"] = string

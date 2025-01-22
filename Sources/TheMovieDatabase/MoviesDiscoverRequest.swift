@@ -63,18 +63,3 @@ internal class MoviesDiscoverRequest: NetworkRequest<MoviesPage, Cursor<Movie>>,
     resulthandler(response.cursor, nil)
   }
 }
-
-private extension SortBy {
-  var value: String {
-    switch self {
-    case .none:
-      return ""
-    case .rating(let direction):
-      return "vote_average.\(direction.rawValue)"
-    case .popularity(let direction):
-      return "popularity.\(direction.rawValue)"
-    case .releaseDate(let direction):
-      return "release_date.\(direction.rawValue)"
-    }
-  }
-}
