@@ -30,6 +30,7 @@ public struct TMDB: Sendable {
     
   public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc)) async throws -> MoviesPage {
     let path: String
+    var params = ["page": String(describing: page)]
     switch list {
     case .popular:
       path = "/movie/popular"
@@ -38,14 +39,15 @@ public struct TMDB: Sendable {
     case .genre(let int):
       fatalError()
     case .search(let string):
-      fatalError()
+      path = "/search/movie"
+      params["query"] = string
     case .actor(let int):
       fatalError()
     case .user(let int):
       fatalError()
     }
 
-    return try await get(path: path, params: ["page": String(describing: page)])
+    return try await get(path: path, params: params)
   }
 
   @Sendable
