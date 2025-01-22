@@ -142,22 +142,12 @@ extension TMDB {
 
 extension TMDB {
   public func listMovieGenres(in language: String = "en") async throws -> [Genre] {
-    fatalError()
-    
-    //try await withCheckedThrowingContinuation { continuation in
-    //  let request = ListMovieGenresRequest(language: language)
-    //  inject(into: request)
-    //  request.resulthandler = {
-    //    result, error in
+    struct GenresResponse: Codable {
+      let genres: [Genre]
+    }
 
-    //    if let error {
-    //      continuation.resume(throwing: error)
-    //    } else {
-    //      continuation.resume(returning: result ?? [])
-    //    }
-    //  }
-    //  request.execute()
-    //}
+    let response: GenresResponse = try await get(path: "/genre/movie/list", params: ["language": language])
+    return response.genres
   }
 }
 
