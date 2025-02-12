@@ -54,7 +54,19 @@ public struct TMDB: Sendable {
       path = "/search/movie"
       params["query"] = string
     case .actor(let int):
-      fatalError()
+      path = "/discover/movie"
+      params["with_cast"] = String(describing: int)
+      params["include_adult"] = "false"
+      params["include_video"] = "true"
+      params["vote_count.gte"] = "50"
+
+      switch sort {
+      case .none:
+        break // no op
+      default:
+        params["sort_by"] = sort.value
+      }
+
     case .user(let int):
       fatalError()
     }
