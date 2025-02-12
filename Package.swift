@@ -14,7 +14,7 @@ let package = Package(
     .library(name: "TMDBModel", targets: ["TMDBModel"])
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/swift-sharing.git", exact: "2.1.0")
+    .package(url: "https://github.com/pointfreeco/swift-sharing", "0.1.2"..<"3.0.0"),
   ],
   targets: [
     .target(

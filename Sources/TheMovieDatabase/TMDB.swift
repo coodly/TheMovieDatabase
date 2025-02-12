@@ -225,6 +225,11 @@ extension TMDB {
   }
 }
 
+extension TMDB {
+  public func fetch(collection id: Int) async throws -> Collection {
+    try await get(path: "/collection/\(id)", params: [:])
+  }
+}
 
 //public typealias TMDBCompletionClosure = ((Cursor<Movie>?, Error?) -> ())
 //

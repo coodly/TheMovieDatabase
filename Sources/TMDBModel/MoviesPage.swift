@@ -6,4 +6,8 @@ public struct MoviesPage: Codable {
   package var cursor: Cursor<Movie> {
     return Cursor<Movie>(page: page, totalPages: totalPages, items: results)
   }
+  
+  public var hasMore: Bool {
+    page < totalPages
+  }
 }
