@@ -7,7 +7,7 @@ private let sharing = Target.Dependency.product(name: "Sharing", package: "swift
 
 let package = Package(
   name: "TheMovieDatabase",
-  platforms: [.iOS(.v13), .tvOS(.v13), .macOS(.v14)],
+  platforms: [.iOS(.v16), .tvOS(.v16), .macOS(.v14)],
   products: [
     .library(name: "TheMovieDatabase", targets: ["TheMovieDatabase"]),
     .library(name: "TMDBLogging", targets: ["TMDBLogging"]),
