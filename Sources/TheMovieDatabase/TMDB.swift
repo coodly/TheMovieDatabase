@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import Dependencies
 import Foundation
 #if canImport(FoundationNetworking)
   import FoundationNetworking
@@ -22,13 +23,20 @@ import Sharing
 import TMDBLogging
 import TMDBModel
 
+private let APIKey = "api_key"
+
 public struct TMDB: Sendable {
   private let apiKey: String
   private let fetch: NetworkFetch
+  private let cacheDateFormatter: DateFormatter
+  private let cacheFolderPath: URL?
   
   public init(apiKey: String, networkFetch: NetworkFetch) {
     self.apiKey = apiKey
     self.fetch = networkFetch
+    cacheDateFormatter = DateFormatter()
+    cacheDateFormatter.dateFormat = "yyyy/MM/dd"
+    cacheFolderPath = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
   }
     
   public func fetch(page: Int, in list: List, sort: SortBy = .popularity(.desc)) async throws -> MoviesPage {
@@ -76,6 +84,58 @@ public struct TMDB: Sendable {
 
     return try await get(path: path, params: params)
   }
+  
+  @Sendable
+  func remoteFetch(_ request: URLRequest) async throws -> Data {
+    try await fetch.fetch(request: request as URLRequest).0
+  }
+  
+  @Sendable
+  func fetchOrLoad(_ request: URLRequest, parameters: [String: String]) async throws -> Data {
+    guard let url = request.url, url.relativePath.hasPrefix("/3/movie/"), let cacheFolderPath else {
+      return try await remoteFetch(request)
+    }
+    
+    @Dependency(\.date.now) var now
+    
+    struct Key: Comparable {
+      let name: String
+      let value: String
+      
+      var key: String {
+        [name, value].joined(separator: "/")
+      }
+      
+      static func < (lhs: Key, rhs: Key) -> Bool {
+        lhs.name < rhs.name
+      }
+    }
+    var params = parameters
+    params[APIKey] = nil
+    let relativePath = request.url!.relativePath
+    var keyComponents = [relativePath]
+    keyComponents.append(cacheDateFormatter.string(from: now))
+    keyComponents.append(contentsOf: params.map(Key.init(name:value:)).map(\.key))
+    keyComponents.append("file.json")
+    let cachedKey = keyComponents.joined(separator: "/")
+    
+    let cachedPath = cacheFolderPath.appending(path: cachedKey, directoryHint: .notDirectory)
+    do {
+      try FileManager.default.createDirectory(at: cachedPath.deletingLastPathComponent(), withIntermediateDirectories: true)
+    } catch {
+      return try await remoteFetch(request)
+    }
+    
+    do {
+      let cached = try Data(contentsOf: cachedPath)
+      print("cache hit")
+      return cached
+    } catch {
+      let data = try await remoteFetch(request)
+      try? data.write(to: cachedPath)
+      return data
+    }
+  }
 
   @Sendable
   func perform<Result: Decodable>(_ method: HTTPMethod, path: String, parameters: [String: String]) async throws -> Result {
@@ -108,7 +168,7 @@ public struct TMDB: Sendable {
     let request = NSMutableURLRequest(url: requestURL)
     request.httpMethod = method.rawValue
     
-    let (data, result) = try await fetch.fetch(request: request as URLRequest)
+    let data = try await fetchOrLoad(request as URLRequest, parameters: parameters)
     
 #if DEBUG
     if let string = String(data: data, encoding: .utf8) {
@@ -143,7 +203,7 @@ public struct TMDB: Sendable {
   
   @Sendable
   func fetchConfigutation() async throws -> Configuration {
-    try await perform(.get, path: "/configuration", parameters: ["api_key": apiKey])
+    try await perform(.get, path: "/configuration", parameters: [APIKey: apiKey])
   }
   
   @Sendable
@@ -156,7 +216,7 @@ public struct TMDB: Sendable {
     }
     
     var paramsSent = params
-    paramsSent["api_key"] = apiKey
+    paramsSent[APIKey] = apiKey
     return try await perform(.get, path: path, parameters: paramsSent)
   }
 }
