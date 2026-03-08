@@ -16,7 +16,7 @@
 
 import Foundation
 
-public struct Actor: Codable, Equatable, Sendable {
+public struct Actor: Codable, Equatable, Sendable, Identifiable {
   public let id: Int
   public let name: String
   public var profile: Image? {
