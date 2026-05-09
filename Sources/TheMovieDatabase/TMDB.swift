@@ -26,12 +26,14 @@ import TMDBModel
 private let APIKey = "api_key"
 
 public struct TMDB: Sendable {
+  private let server: String
   private let apiKey: String
   private let fetch: NetworkFetch
   private let cacheDateFormatter: DateFormatter
   private let cacheFolderPath: URL?
   
-  public init(apiKey: String, networkFetch: NetworkFetch) {
+  public init(server: String = "https://api.themoviedb.org/3", apiKey: String, networkFetch: NetworkFetch) {
+    self.server = server
     self.apiKey = apiKey
     self.fetch = networkFetch
     cacheDateFormatter = DateFormatter()
@@ -139,8 +141,7 @@ public struct TMDB: Sendable {
 
   @Sendable
   func perform<Result: Decodable>(_ method: HTTPMethod, path: String, parameters: [String: String]) async throws -> Result {
-    let APIServer = "https://api.themoviedb.org/3"
-    var components = URLComponents(url: URL(string: APIServer)!, resolvingAgainstBaseURL: true)!
+    var components = URLComponents(url: URL(string: server)!, resolvingAgainstBaseURL: true)!
     components.path = components.path + path
         
     Logging.log("Perform \(method.rawValue) to \(components.url!)")
